@@ -8,7 +8,7 @@
   if ('serviceWorker' in navigator) {
     var habiaVersion = !!navigator.serviceWorker.controller;
     navigator.serviceWorker.addEventListener('controllerchange', function () {
-      if (habiaVersion) avisoActualizacion(); // la primera instalación no avisa
+      if (habiaVersion) hayVersionNueva(); // la primera instalación no avisa
       habiaVersion = true;
     });
     window.addEventListener('load', function () {
@@ -21,18 +21,17 @@
       }).catch(function () {});
     });
   }
-  function avisoActualizacion() {
-    if (document.querySelector('.aviso-web-nueva')) return;
-    var d = document.createElement('button');
-    d.className = 'aviso-web-nueva';
-    d.innerHTML = '<b>🎉 ¡Hay una versión nueva!</b><span>Tocá aquí para actualizar</span>';
-    d.addEventListener('click', function () { location.reload(); });
-    document.body.appendChild(d);
+  // Llegó una versión nueva: se muestra el cartel rojo del menú (js/actualizacion.js)
+  function hayVersionNueva() {
+    window.WebArca.hayNueva = true;
+    var raiz = document.getElementById('pantalla');
+    if (raiz && window.Actualizacion) Actualizacion.enMenu(raiz);
   }
 
   // Botón de Ajustes "Cargar la última versión": borra la copia guardada del juego y la vuelve a bajar.
   // No borra el avance (estrellas, alias, ajustes): eso está en otro lado.
   window.WebArca = {
+    hayNueva: false,
     recargar: function () {
       var pasos = [];
       if (window.caches) pasos.push(caches.keys().then(function (ks) {

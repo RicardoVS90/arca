@@ -1146,15 +1146,27 @@ body:not(.clasico) .situacion .ic-sit { width: 84px; height: 84px; }
 body:not(.clasico) .elemento .ic-img { width: 120px; height: 120px; animation: pop .5s; }
 body:not(.clasico) .ficha-sel .ic-img { width: 40px; height: 40px; }
 body:not(.clasico) .modo-imagen { width: 3.6rem; height: 3.2rem; object-fit: contain; }
-/* Aviso de versión nueva */
-.aviso-version { display: flex; align-items: center; gap: 10px; width: 100%; margin: 8px 0 10px; padding: 10px 14px; text-align: left;
-  border-radius: var(--radio); background: #FFF4CC; border: 3px solid var(--acento); color: #5A3E00; box-shadow: var(--sombra); animation: pop .5s; }
-.aviso-version .av-icono { font-size: 1.8rem; }
-.aviso-version .av-texto { display: flex; flex-direction: column; }
-.aviso-version b { font-size: 1.05rem; line-height: 1.15; }
-.aviso-version small { font-weight: 700; opacity: .85; }
+/* Aviso de versión nueva: cartel rojo en el menú, debajo de "Jugar en línea" */
+.aviso-version { position: relative; flex: none; height: auto; min-height: 88px; display: flex; align-items: center; gap: 12px; width: 100%;
+  margin: 10px 0 12px; padding: 12px 12px 12px 10px; border-radius: 22px; text-align: left; color: #fff; overflow: visible;
+  background: linear-gradient(135deg, #FF4D4D 0%, #E01E37 55%, #B5102A 100%);
+  box-shadow: 0 5px 0 #8E0C20, 0 10px 22px rgba(224,30,55,.35); animation: av-latir 1.8s ease-in-out infinite; }
+.aviso-version::before { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(circle at 15% 20%, rgba(255,255,255,.25), transparent 45%); }
+.av-dibujo { position: relative; flex: none; width: 64px; height: 64px; display: inline-block; }
+.av-dibujo img { width: 100%; height: 100%; border-radius: 16px; box-shadow: 0 3px 0 rgba(0,0,0,.18); display: block; }
+.av-flecha { position: absolute; right: -6px; top: -6px; width: 28px; height: 28px; border-radius: 50%; background: #FFD23F; color: #8E0C20;
+  font-weight: 900; display: grid; place-items: center; font-size: 1.05rem; box-shadow: 0 2px 0 #C79A00; animation: av-sube 1.2s ease-in-out infinite; }
+.av-dibujo.grande { width: 84px; height: 84px; }
+.aviso-version .av-txt { position: relative; display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.aviso-version .av-txt b { font-size: 1.06rem; line-height: 1.1; }
+.aviso-version .av-txt small { font-weight: 700; opacity: .92; font-size: .82rem; line-height: 1.2; }
+.aviso-version .av-btn { position: relative; flex: none; background: #fff; color: #C1121F; font-weight: 900; border-radius: 999px;
+  padding: 7px 10px; font-size: .86rem; box-shadow: 0 3px 0 rgba(0,0,0,.15); }
+.btn-rojo { background: linear-gradient(135deg, #FF4D4D, #E01E37) !important; color: #fff !important; box-shadow: 0 5px 0 #8E0C20 !important; }
+@keyframes av-latir { 50% { transform: scale(1.02); } }
+@keyframes av-sube { 50% { transform: translateY(-4px); } }
 .aviso-obligatorio { text-align: center; display: grid; gap: 10px; justify-items: center; }
-.aviso-obligatorio .ao-icono { font-size: 3rem; }
 .aviso-obligatorio h2 { margin: 0; }
 .aviso-obligatorio p { margin: 0; font-weight: 600; line-height: 1.35; }
 .aviso-obligatorio button { width: 100%; }
@@ -1246,10 +1258,6 @@ body:not(.clasico) .modo-imagen { width: 3.6rem; height: 3.2rem; object-fit: con
   box-shadow: 0 8px 24px rgba(0,0,0,.22); display: flex; flex-direction: column; gap: 4px; font-size: .98rem; animation: entrar .3s ease-out; }
 .aviso-ios > b { font-size: 1.05rem; }
 .aviso-ios button { position: absolute; top: 8px; right: 8px; width: 32px; height: 32px; border-radius: 50%; background: #EEF1F5; font-weight: 800; }
-.aviso-web-nueva { position: fixed; left: 12px; right: 12px; top: calc(10px + env(safe-area-inset-top)); z-index: 10000;
-  background: #FFE45C; color: #2B2100; border-radius: 16px; padding: 12px 14px; box-shadow: 0 8px 24px rgba(0,0,0,.22);
-  display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 1rem; animation: entrar .3s ease-out; }
-.aviso-web-nueva b { font-size: 1.1rem; }
 /* Pantallas anchas (PC, tablet acostada): el parque se ve entero en el centro, y a los costados
    la misma imagen muy desenfocada, para que no quede todo verde y agrandado */
 .bv-parque-fondo { display: none; }
@@ -1266,3 +1274,7 @@ body:not(.clasico) .modo-imagen { width: 3.6rem; height: 3.2rem; object-fit: con
   body.clasico .bv-parque-fondo-clasico { display: block; position: fixed; inset: 0; z-index: 0;
     background: linear-gradient(180deg, #5EC8F6 0%, #BFEBFF 45%, #E8FAFF 60%, #A9E28A 62%, #7BD35A 80%, #4FAE3E 100%); }
 }
+/* Teclado QWERTY de los códigos: las teclas que no se usan quedan apagadas */
+.teclado-qwerty.teclado-cod { margin: 4px 0 14px; }
+.teclado-qwerty .tecla.apagada { opacity: .28; box-shadow: none; background: #EEF1F5; }
+.nota-teclas { margin: -6px 0 14px; text-align: center; font-size: .88rem; line-height: 1.3; }

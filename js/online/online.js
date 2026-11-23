@@ -170,6 +170,20 @@
     g.hidden = !n; g.textContent = n;
   }
 
+  // Teclado QWERTY para códigos (sala y recuperación). Las teclas que nunca aparecen en un código
+  // (0, 1, I, L, O, Ñ) se ven apagadas, así el teclado tiene la forma de siempre y no se confunden.
+  function tecladoCodigoHTML(accion, accionBorrar) {
+    return '<div class="teclado-qwerty teclado-cod">' + FILAS_TECLADO.map(function (fila, i) {
+      return '<div class="fila-q">' + fila.split('').map(function (c) {
+        return CARACTERES.indexOf(c) >= 0
+          ? '<button class="tecla" data-on="' + accion + '" data-v="' + c + '">' + c + '</button>'
+          : '<button class="tecla apagada" disabled aria-hidden="true">' + c + '</button>';
+      }).join('') + (i === 3 ? '<button class="tecla borrar" data-on="' + accionBorrar + '">⌫</button>' : '') + '</div>';
+    }).join('') + '</div>' +
+      '<p class="ol-nota nota-teclas">ℹ️ Las teclas apagadas no se usan en los códigos, para no confundirse: ' +
+      'el <b>0</b> se parece a la <b>O</b>, y el <b>1</b> a la <b>I</b> y a la <b>L</b>. La <b>Ñ</b> tampoco se usa.</p>';
+  }
+
   // ---------- Constructor de alias: un teclado QWERTY propio (letras, números y espacio)
   // Regla: de 3 a 12 caracteres en total; al menos 3 deben ser letras o números.
   var MAX_ALIAS = 12;
@@ -814,8 +828,7 @@
       '<div class="casillas-rec">' + [0, 1, 2].map(function (g) {
         return '<div class="grupo-rec">' + [0, 1, 2, 3].map(function () { return '<span class="casilla"></span>'; }).join('') + '</div>';
       }).join('<span class="guion">-</span>') + '</div>' +
-      '<div class="teclado-codigo">' + CARACTERES.split('').map(function (c) { return '<button class="tecla" data-on="tecla-rec" data-v="' + c + '">' + c + '</button>'; }).join('') +
-        '<button class="tecla borrar" data-on="tecla-rec-borrar">⌫</button></div>' +
+      tecladoCodigoHTML('tecla-rec', 'tecla-rec-borrar') +
       '<button class="btn-principal" data-on="recuperar" disabled>🔑 Recuperar mi perfil</button>';
   };
   function pintarRec(raiz) {
@@ -889,8 +902,7 @@
       raiz.innerHTML = cabecera('Entrar con código') +
         '<p class="ol-intro">Tocá los caracteres del código que te pasó el organizador:</p>' +
         '<div class="casillas-codigo">' + [0, 1, 2, 3, 4, 5].map(function () { return '<span class="casilla"></span>'; }).join('') + '</div>' +
-        '<div class="teclado-codigo">' + CARACTERES.split('').map(function (c) { return '<button class="tecla" data-on="tecla" data-v="' + c + '">' + c + '</button>'; }).join('') +
-          '<button class="tecla borrar" data-on="tecla-borrar">⌫</button></div>' +
+        tecladoCodigoHTML('tecla', 'tecla-borrar') +
         '<button class="btn-principal" data-on="entrar-sala" disabled>Entrar</button>';
     });
   };

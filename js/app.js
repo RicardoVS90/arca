@@ -1,6 +1,6 @@
 // Navegación y pantallas de la app
 (function () {
-  var VERSION = '2.15.3';
+  var VERSION = '2.15.5';
   var raiz = document.getElementById('pantalla');
   var historial = [];
   var estado = { testamento: 'AT', mecanica: 'tocar' };
