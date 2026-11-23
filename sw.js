@@ -1,6 +1,6 @@
 // Generado por herramientas/preparar-web.py — no editar a mano.
 // Versión web: guarda todo el juego en el teléfono para que funcione sin conexión.
-var CACHE = "arca-2.15.3-80818610bb";
+var CACHE = "arca-2.15.3-b610891957";
 var ARCHIVOS = [
 "./",
 "css/app.css",
@@ -8,6 +8,7 @@ var ARCHIVOS = [
 "fonts/baloo-2-latin-700-normal.woff2",
 "fonts/baloo-2-latin-800-normal.woff2",
 "iconos/apple-touch-icon.png",
+"iconos/compartir.jpg",
 "iconos/favicon-32.png",
 "iconos/icono-192.png",
 "iconos/icono-512.png",
@@ -207,7 +208,10 @@ var ARCHIVOS = [
 "index.html"
 ];
 self.addEventListener('install', function (e) {
-  e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(ARCHIVOS); }).then(function () { return self.skipWaiting(); }));
+  // cache: 'reload' = bajar cada archivo de internet, nunca de la memoria vieja del navegador
+  e.waitUntil(caches.open(CACHE).then(function (c) {
+    return c.addAll(ARCHIVOS.map(function (a) { return new Request(a, { cache: 'reload' }); }));
+  }).then(function () { return self.skipWaiting(); }));
 });
 self.addEventListener('activate', function (e) {
   e.waitUntil(caches.keys().then(function (ks) {

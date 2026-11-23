@@ -368,6 +368,7 @@
           '<button class="btn-secundario btn-probar" data-accion="probar-voz">▶ Probar la voz</button>' +
         '</div>' +
         '<button class="btn-secundario" data-accion="cambiar-club">Cambiar club o personaje</button>' +
+        (window.WebArca ? '<button class="btn-secundario" data-accion="web-recargar">🔄 Cargar la última versión</button>' : '') +
         '<button class="btn-principal" data-accion="cerrar-modal">Listo</button>' +
         '<p class="creditos">Creado por Rickelisoft<br>rickelisoft@gmail.com<br>Versión ' + VERSION + '</p>' +
         '<p class="creditos copyright-biblia">Texto bíblico: Reina-Valera 1960® © Sociedades Bíblicas en América Latina, 1960. ' +
@@ -480,6 +481,7 @@
         break;
       case 'voz-alternar': Voz.alternar(); break;
       case 'actualizar-app': Actualizacion.actualizar(); break;
+      case 'web-recargar': if (window.WebArca) WebArca.recargar(); break;
       case 'cerrar-modal': document.getElementById('modal').classList.remove('visible'); break;
       case 'cambiar-club':
         document.getElementById('modal').classList.remove('visible');

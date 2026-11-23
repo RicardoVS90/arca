@@ -30,6 +30,21 @@
     document.body.appendChild(d);
   }
 
+  // Botón de Ajustes "Cargar la última versión": borra la copia guardada del juego y la vuelve a bajar.
+  // No borra el avance (estrellas, alias, ajustes): eso está en otro lado.
+  window.WebArca = {
+    recargar: function () {
+      var pasos = [];
+      if (window.caches) pasos.push(caches.keys().then(function (ks) {
+        return Promise.all(ks.filter(function (k) { return k.indexOf('arca-') === 0; }).map(function (k) { return caches.delete(k); }));
+      }));
+      if ('serviceWorker' in navigator) pasos.push(navigator.serviceWorker.getRegistrations().then(function (rs) {
+        return Promise.all(rs.map(function (r) { return r.unregister(); }));
+      }));
+      Promise.all(pasos).catch(function () {}).then(function () { location.reload(); });
+    }
+  };
+
   // iPhone/iPad en Safari: explicar una sola vez cómo dejarla como app en la pantalla de inicio
   var ua = navigator.userAgent || '';
   var esIOS = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
