@@ -177,7 +177,7 @@
       function chico(club, genero, demora) {
         return '<div class="bv-chico bv-' + club + '" style="--d:' + demora + 's">' + Personaje.dibujar({ club: club, genero: genero }) + '</div>';
       }
-      raiz.innerHTML = (Apariencia.clasica() ? parqueSVG() : '<img class="bv-parque-fondo" src="img/menu/parque.webp" alt=""><img class="bv-parque" src="img/menu/parque.webp" alt="">') +
+      raiz.innerHTML = (Apariencia.clasica() ? '<div class="bv-parque-fondo-clasico"></div>' + parqueSVG() : '<img class="bv-parque-fondo" src="img/menu/parque.webp" alt=""><img class="bv-parque" src="img/menu/parque.webp" alt="">') +
         '<div class="bienvenida">' +
           '<h1 class="bv-titulo">¡Bienvenidos a<br><span>Arca de Juegos Bíblicos!</span></h1>' +
           '<div class="bv-grupo">' +
