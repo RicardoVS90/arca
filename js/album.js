@@ -72,8 +72,11 @@
   }
   function siguiente() {
     var t = cola.shift();
-    if (!t) { mostrando = false; return; }
+    if (!t) { mostrando = false; try { Musica.callar(false, 'tarjeta'); } catch (e) {} return; }
+    var primera = !mostrando;
     mostrando = true;
+    // La música se calla mientras el jugador ve sus tarjetas nuevas y vuelve al cerrar la última
+    try { Musica.callar(true, 'tarjeta'); } catch (e) {}
     var m = document.getElementById('modal');
     m.innerHTML = '<div class="modal-caja album-nueva"><h2>🎉 ¡Nueva tarjeta!</h2>' +
       '<div class="sobre"><div class="sobre-tapa">🃏</div>' + tarjetaHTML(t, true) + '</div>' +
@@ -81,9 +84,8 @@
       '<button class="btn-principal" data-x="ver">Ver la tarjeta</button>' +
       '<button class="btn-secundario" data-x="cerrar">Seguir jugando</button></div>';
     m.classList.add('visible');
-    try { Sonido.victoria(); } catch (e) {}
+    setTimeout(function () { try { Sonido.premio(); } catch (e) {} }, primera ? 180 : 0);
     setTimeout(function () { var s = m.querySelector('.sobre'); if (s) s.classList.add('abierto'); }, 500);
-    setTimeout(function () { try { Voz.decir('¡Nueva tarjeta! ' + t.nombre); } catch (e) {} }, 900);
     m.querySelector('[data-x="ver"]').addEventListener('click', function () { detalle(t, siguiente); });
     m.querySelector('[data-x="cerrar"]').addEventListener('click', function () { cerrar(); siguiente(); });
   }
@@ -106,7 +108,6 @@
       '<p class="ad-dato">⭐ <b>Dato curioso:</b> ' + t.dato + '</p>' +
       '<button class="btn-principal" data-x="cerrar">Cerrar</button></div>';
     m.classList.add('visible');
-    try { Voz.leer(t.nombre + '. ' + t.texto + ' Para buscar en tu Biblia: ' + t.cita.replace(':', ', ') + '.'); } catch (e) {}
     m.querySelector('[data-x="cerrar"]').addEventListener('click', function () { try { Voz.cancelar(); } catch (e) {} cerrar(); if (alCerrar) alCerrar(); });
   }
 
@@ -149,9 +150,6 @@
       '<p class="af-como">' + comoSeGana(t) + '</p>' + (a ? '<div class="af-avance">' + avanceHTML(a) + '</div>' : '') +
       '<button class="btn-principal" data-x="cerrar">Entendido</button></div>';
     m.classList.add('visible');
-    var voz = 'Esta tarjeta se gana así: ' + comoSeGana(t).replace(/^\S+\s/, '') + '.';
-    if (a) voz += ' ' + a.txt + '.';
-    try { Voz.leer(voz); } catch (e) {}
     m.querySelector('[data-x="cerrar"]').addEventListener('click', function () { try { Voz.cancelar(); } catch (e) {} cerrar(); });
   }
 
@@ -180,7 +178,8 @@
       Sonido.toque();
       detalle(A.tarjetas.filter(function (t) { return t.id === b.dataset.id; })[0]);
     });
-    Voz.leer('Tu álbum: tenés ' + n + ' de ' + A.tarjetas.length + ' tarjetas.');
+    // El álbum es silencioso: la voz no lee nada acá.
+    try { Voz.cancelar(); } catch (e) {}
   }
 
   function conteo() { var d = datos(); return A.tarjetas.filter(function (t) { return d.tiene[t.id]; }).length; }

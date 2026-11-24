@@ -1456,3 +1456,17 @@ body:not(.clasico) .modo-imagen { width: 3.6rem; height: 3.2rem; object-fit: con
   .contenido-juego > .plano { max-height: calc(100vh - 130px); max-width: calc((100vh - 130px) * .75); }
   .contenido-juego > .tablas .tabla-piedra { min-height: calc(100vh - 160px); }
 }
+
+/* ---------- Arte de Jugar en línea (solo apariencia Moderna) ---------- */
+body:not(.clasico) .ic[data-arte] { font-size: 0 !important; display: inline-block; width: 74px; height: 74px; flex: none;
+  background: center / contain no-repeat; filter: drop-shadow(0 3px 3px rgba(0,0,0,.2)); }
+body:not(.clasico) .ol-mensaje .ic[data-arte] { width: 96px; height: 96px; }
+body:not(.clasico) .btn-escanear .ic[data-arte] { width: 58px; height: 58px; }
+body:not(.clasico) .ic[data-arte="carpas"] { background-image: url(../img/modos/carpas.webp); }
+body:not(.clasico) .ic[data-arte="balanza"] { background-image: url(../img/modos/balanza.webp); }
+body:not(.clasico) .ic[data-arte="amigos"] { background-image: url(../img/modos/amigos.webp); }
+body:not(.clasico) .ic[data-arte="corona"] { background-image: url(../img/modos/corona.webp); }
+body:not(.clasico) .ic[data-arte="pergamino"] { background-image: url(../img/modos/pergamino.webp); }
+body:not(.clasico) .ic[data-arte="sopa-nt"] { background-image: url(../img/modos/sopa-nt.webp); }
+body:not(.clasico) .ic[data-arte="catalejo"] { background-image: url(../img/modos/catalejo.webp); }
+body:not(.clasico) .ic[data-arte="mapa"] { background-image: url(../img/modos/mapa.webp); }

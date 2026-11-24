@@ -16,7 +16,7 @@ window.Musica = (function () {
 
   var audio = new Audio();
   audio.preload = 'auto';
-  var lista = [], pos = 0, enJuego = false, fundido = null, bloqueada = false, iniciada = false;
+  var silencios = {}, lista = [], pos = 0, enJuego = false, fundido = null, bloqueada = false, iniciada = false, callada = false;
 
   function activa() { return Almacen.leer('musica', true); }
   function estilo() { var e = Almacen.leer('musica_estilo', 'campamento'); return ESTILOS[e] ? e : 'campamento'; }
@@ -35,7 +35,7 @@ window.Musica = (function () {
       if (k >= pasos) { clearInterval(fundido); if (luego) luego(); }
     }, 50);
   }
-  function puedeSonar() { return activa() && !enJuego && !document.hidden; }
+  function puedeSonar() { return activa() && !enJuego && !callada && !document.hidden; }
   function tocar() {
     if (!puedeSonar() || !audio.src) return;
     var p = audio.play();
@@ -76,6 +76,15 @@ window.Musica = (function () {
     estilo: estilo,
     ESTILOS: ESTILOS,
     _audio: audio,
+    // Silencio momentáneo (por ejemplo, mientras se muestra una tarjeta nueva del álbum)
+    // Cada pedido de silencio tiene su nombre (tarjeta, ovación…): la música vuelve cuando no queda ninguno
+    callar: function (si, quien) {
+      quien = quien || 'general';
+      if (si) silencios[quien] = 1; else delete silencios[quien];
+      callada = Object.keys(silencios).length > 0;
+      if (callada) { if (!audio.paused) volumen(0, 150, function () { audio.pause(); }); }
+      else if (iniciada && audio.paused) tocar();
+    },
     activar: function (si) {
       Almacen.guardar('musica', !!si);
       if (si) { if (!iniciada) iniciar(); else tocar(); } else pausar();

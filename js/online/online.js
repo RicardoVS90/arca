@@ -150,10 +150,10 @@
         '<button class="ol-yo" data-on="editar-perfil">' + avatarHTML(yo.avatar, 'grande') +
           '<span><b>' + esc(yo.alias) + '</b><small>' + App.CLUBES[clubActual()] + ' · tocá para cambiar</small></span></button>' +
         '<div class="ol-opciones">' +
-          '<button class="ol-opcion op-duelo" data-on="ir" data-p="online-duelo"><span class="ic">⚡</span><b>Duelo en vivo</b><small>Hasta 100 jugadores con un código</small></button>' +
-          '<button class="ol-opcion op-desafio" data-on="ir" data-p="online-desafios"><span class="ic">⚔️</span><b>Desafíos</b><small>1 contra 1 con tus amigos</small><i class="globo" data-globo="desafios" hidden></i></button>' +
-          '<button class="ol-opcion op-amigos" data-on="ir" data-p="online-amigos"><span class="ic">👫</span><b>Amigos</b><small>Solicitudes y lista</small><i class="globo" data-globo="amigos" hidden></i></button>' +
-          '<button class="ol-opcion op-ranking" data-on="ir" data-p="online-ranking"><span class="ic">🏆</span><b>Ranking semanal</b><small>Por club, se reinicia cada lunes</small></button>' +
+          '<button class="ol-opcion op-duelo" data-on="ir" data-p="online-duelo"><span class="ic" data-arte="carpas">⚡</span><b>Duelo en vivo</b><small>Hasta 100 jugadores con un código</small></button>' +
+          '<button class="ol-opcion op-desafio" data-on="ir" data-p="online-desafios"><span class="ic" data-arte="balanza">⚔️</span><b>Desafíos</b><small>1 contra 1 con tus amigos</small><i class="globo" data-globo="desafios" hidden></i></button>' +
+          '<button class="ol-opcion op-amigos" data-on="ir" data-p="online-amigos"><span class="ic" data-arte="amigos">👫</span><b>Amigos</b><small>Solicitudes y lista</small><i class="globo" data-globo="amigos" hidden></i></button>' +
+          '<button class="ol-opcion op-ranking" data-on="ir" data-p="online-ranking"><span class="ic" data-arte="corona">🏆</span><b>Ranking semanal</b><small>Por club, se reinicia cada lunes</small></button>' +
         '</div>';
       // Globitos con solicitudes y desafíos pendientes
       escuchar(Nube.escucharConsulta('amistades', { donde: [['miembros', 'array-contains', yo.uid]] }, function (l) {
@@ -566,8 +566,11 @@
   function cifrasHTML(nombre, x) {
     return '<p class="cifras"><b>' + esc(nombre) + ':</b> ✔ ' + x.aciertos + ' · ✘ ' + x.errores + ' · 🤷 ' + x.nose + ' · ⏱ ' + seg(x.tiempo) + '</p>';
   }
+  var ovacionados = {};
   function reclamarVictoria(d, r) {
     if (r === 1 && window.Album) Album.evento('desafio-ganado', d.id);
+    // La primera vez que el jugador ve que ganó este desafío: ovación de niños
+    if (r === 1 && !d.res[yo.uid].bono && !ovacionados[d.id]) { ovacionados[d.id] = 1; Sonido.ovacion(); }
     if (r !== 1 || d.res[yo.uid].bono) return;
     var o = {}; o['res.' + yo.uid + '.bono'] = true;
     Nube.actualizar('desafios/' + d.id, o).then(function () { sumarRanking(PUNTOS.victoria); }).catch(function () {});
@@ -785,7 +788,7 @@
   P['online-codigo'] = function (raiz) {
     conectar(raiz, 'Código de recuperación', function () {
       var mio = codigoGuardado();
-      var intro = '<div class="ol-mensaje chico"><span>🔑</span><p>Con este código recuperás tu jugador (alias, amigos, desafíos y puntos) ' +
+      var intro = '<div class="ol-mensaje chico"><span class="ic" data-arte="mapa">🔑</span><p>Con este código recuperás tu jugador (alias, amigos, desafíos y puntos) ' +
         'si cambiás de teléfono o reinstalás la app.</p></div>';
       if (mio) {
         raiz.innerHTML = cabecera('Código de recuperación') + intro +
@@ -860,8 +863,8 @@
     conectar(raiz, 'Duelo en vivo', function () {
       raiz.innerHTML = cabecera('Duelo en vivo') +
         '<div class="ol-opciones una-col">' +
-          '<button class="ol-opcion op-duelo" data-on="ir" data-p="online-organizar"><span class="ic">🎤</span><b>Organizar un duelo</b><small>Elegís el tema y te damos un código para compartir</small></button>' +
-          '<button class="ol-opcion op-desafio" data-on="ir" data-p="online-unirse"><span class="ic">🔑</span><b>Entrar con código</b><small>Escribí el código de 6 caracteres del organizador</small></button>' +
+          '<button class="ol-opcion op-duelo" data-on="ir" data-p="online-organizar"><span class="ic" data-arte="pergamino">🎤</span><b>Organizar un duelo</b><small>Elegís el tema y te damos un código para compartir</small></button>' +
+          '<button class="ol-opcion op-desafio" data-on="ir" data-p="online-unirse"><span class="ic" data-arte="sopa-nt">🔑</span><b>Entrar con código</b><small>Escribí el código de 6 caracteres del organizador</small></button>' +
         '</div>';
     });
   };
@@ -903,7 +906,7 @@
     conectar(raiz, 'Entrar con código', function () {
       raiz._codigo = '';
       raiz.innerHTML = cabecera('Entrar con código') +
-        '<button class="btn-escanear" data-on="escanear-qr"><span>📷</span><b>Escanear el QR</b><small>Apuntá con la cámara al código de la pantalla</small></button>' +
+        '<button class="btn-escanear" data-on="escanear-qr"><span class="ic" data-arte="catalejo">📷</span><b>Escanear el QR</b><small>Apuntá con la cámara al código de la pantalla</small></button>' +
         '<p class="ol-intro">O tocá los caracteres del código que te pasó el organizador:</p>' +
         '<div class="casillas-codigo">' + [0, 1, 2, 3, 4, 5].map(function () { return '<span class="casilla"></span>'; }).join('') + '</div>' +
         tecladoCodigoHTML('tecla', 'tecla-borrar') +
@@ -1157,7 +1160,7 @@
           if (window.Album) {
             Album.evento('duelo-jugado');
             if (pos === 1 && podio.length >= 2) Album.evento('duelo-ganado');
-            setTimeout(function () { Album.revisar(); }, 2500);
+            setTimeout(function () { Album.revisar(); }, 2500 + (pos === 1 && podio.length >= 2 ? Sonido.OVACION_MS : 0));
           }
           Nube.doc('salas/' + codigo + '/jugadores/' + yo.uid).then(function (j) {
             // Ranking semanal: nunca resta. (aciertos − errores) x10 si da positivo, +10 por cada ⚡ y bonus de podio
@@ -1165,7 +1168,7 @@
             sumarRanking(pts);
             var p = zona.querySelector('.pts-ranking'); if (p) p.textContent = '+' + pts + ' puntos al ranking semanal';
           }).catch(function () {});
-          if (pos <= 3) Sonido.victoria();
+          if (pos === 1 && podio.length >= 2) Sonido.ovacion(); else if (pos <= 3) Sonido.victoria();
         }
         zona.innerHTML = '<h2 class="titulo-fin">🏁 ¡Fin del duelo!</h2>' +
           '<div class="podio">' + [1, 0, 2].map(function (i) {

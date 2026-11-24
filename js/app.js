@@ -1,6 +1,6 @@
 // Navegación y pantallas de la app
 (function () {
-  var VERSION = '2.16.1';
+  var VERSION = '2.16.2';
   var raiz = document.getElementById('pantalla');
   var historial = [];
   var estado = { testamento: 'AT', mecanica: 'tocar' };
@@ -331,7 +331,9 @@
       }
       raiz._ultimo = r;
       Album.evento('partida', r);
-      setTimeout(function () { if (raiz.dataset.actual === 'resultado') Album.revisar(); }, 1800);
+      // 3 estrellas: ovación de niños; la tarjeta del álbum (si hay) aparece cuando termina
+      var espera = r.estrellas === 3 ? Sonido.ovacion() : 0;
+      setTimeout(function () { if (raiz.dataset.actual === 'resultado') Album.revisar(); }, 1800 + espera);
       raiz.innerHTML =
         '<div class="resultado">' +
           '<h1>' + r.titulo + '</h1>' +

@@ -119,12 +119,19 @@
       var q = qs[i], k = +b.dataset.k, ok = k === q.c;
       ui.cont.querySelectorAll('.opcion-mand').forEach(function (x) { x.disabled = true; });
       ui.cont.querySelector('.opcion-mand[data-k="' + q.c + '"]').classList.add('correcta');
-      if (ok) { bien++; Sonido.acierto(); Voz.decir('¡Bien ahí!'); }
+      // Frase de acierto: va cambiando y no se repite seguida (la voz no la lee)
+      var frase = '';
+      if (ok) {
+        bien++; Sonido.acierto(); try { Voz.callar(); } catch (e) {}
+        var FRASES = ['¡Bien!', '¡Muy bien!', '¡Excelente!'], ant = ui.cont._frase;
+        do { frase = FRASES[Math.floor(Math.random() * FRASES.length)]; } while (frase === ant);
+        ui.cont._frase = frase;
+      }
       else { Sonido.error(); b.classList.add('mal'); }
       i++;
       var ultima = i >= qs.length;
       mostrarAcierto(ui.cont.querySelector('.zona-siguiente'),
-        ok ? (q.ref ? tarjetaVerde('¡Bien ahí!', q.ref) : '') :
+        ok ? tarjetaVerde(frase, q.ref || '') :
           '<div class="tarjeta-roja"><b>La respuesta correcta era:</b><span>' + q.o[q.c] + (q.ref ? ' · ' + q.ref : '') + '</span></div>',
         function () { if (ultima) terminar(); else pintar(); }, ultima ? 'Ver resultado ▶' : null);
     });

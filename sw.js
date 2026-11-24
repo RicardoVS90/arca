@@ -1,6 +1,6 @@
 // Generado por herramientas/preparar-web.py — no editar a mano.
 // Versión web: guarda todo el juego en el teléfono para que funcione sin conexión.
-var CACHE = "arca-2.16.1-0cafa5cd5c";
+var CACHE = "arca-2.16.2-8949a335e8";
 var ARCHIVOS = [
 "./",
 "css/app.css",
@@ -124,6 +124,7 @@ var ARCHIVOS = [
 "img/menu/isla-sopa.webp",
 "img/menu/isla-versiculos.webp",
 "img/menu/parque.webp",
+"img/modos/amigos.webp",
 "img/modos/balanza.webp",
 "img/modos/barca.webp",
 "img/modos/biblia.webp",
@@ -257,6 +258,7 @@ var ARCHIVOS = [
 "musica/videojuego/eterna-roca.ogg",
 "musica/videojuego/grande-gozo.ogg",
 "musica/videojuego/hay-poder-en-jesus.ogg",
+"sonidos/ovacion.mp3",
 "index.html"
 ];
 self.addEventListener('install', function (e) {

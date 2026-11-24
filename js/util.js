@@ -59,6 +59,31 @@ window.Sonido = {
   victoria: function () {
     var n = [523, 659, 784, 1046];
     for (var i = 0; i < n.length; i++) this._tono(n[i], i * 0.11, 0.3, 'triangle', 0.16);
+  },
+  // Ovación de niños al ganar (3 estrellas, desafío o duelo ganado). La música se calla mientras suena.
+  // Devuelve cuánto dura (ms) para que lo que venga después (tarjeta del álbum) espere.
+  OVACION_MS: 3800,
+  ovacion: function () {
+    if (!this.activo()) return 0;
+    if (Date.now() - (this._ultOvacion || 0) < this.OVACION_MS + 1000) return 0; // una sola a la vez
+    this._ultOvacion = Date.now();
+    try {
+      var a = new Audio('sonidos/ovacion.mp3'); a.volume = 0.8;
+      try { Musica.callar(true, 'ovacion'); } catch (e) {}
+      var listo = function () { try { Musica.callar(false, 'ovacion'); } catch (e) {} };
+      a.addEventListener('ended', listo); a.addEventListener('error', listo);
+      setTimeout(listo, this.OVACION_MS + 1500);
+      var p = a.play(); if (p && p.catch) p.catch(listo);
+      return this.OVACION_MS;
+    } catch (e) { return 0; }
+  },
+  // Premio (tarjeta nueva): arpegio rápido que sube, acorde final y destellos
+  premio: function () {
+    var n = [784, 988, 1175, 1568];
+    for (var i = 0; i < n.length; i++) this._tono(n[i], i * 0.06, 0.16, 'square', 0.07);
+    var acorde = [1046, 1319, 1568];
+    for (var j = 0; j < acorde.length; j++) this._tono(acorde[j], 0.26, 0.7, 'triangle', 0.13);
+    this._tono(2093, 0.36, 0.25, 'sine', 0.06); this._tono(2637, 0.48, 0.3, 'sine', 0.05);
   }
 };
 
