@@ -145,6 +145,7 @@
   // ---------- Inicio de "Jugar en línea"
   P.online = function (raiz) {
     conectar(raiz, 'Jugar en línea', function () {
+      if (Escaner.pendiente()) { setTimeout(function () { App.ir('online-unirse'); }, 0); }
       raiz.innerHTML = cabecera('Jugar en línea') +
         '<button class="ol-yo" data-on="editar-perfil">' + avatarHTML(yo.avatar, 'grande') +
           '<span><b>' + esc(yo.alias) + '</b><small>' + App.CLUBES[clubActual()] + ' · tocá para cambiar</small></span></button>' +
@@ -398,6 +399,7 @@
           var rec = amistades.filter(function (a) { return a.estado === 'pendiente' && a.para === yo.uid; });
           var env = amistades.filter(function (a) { return a.estado === 'pendiente' && a.de === yo.uid; });
           var ami = amistades.filter(function (a) { return a.estado === 'aceptada'; });
+          if (ami.length && window.Album) Album.evento('amigo');
           function fila(a, botones, extra) {
             var otro = a.miembros[0] === yo.uid ? a.miembros[1] : a.miembros[0];
             var n = nombreDe(otro, (a.info || {})[otro], mapa);
@@ -565,6 +567,7 @@
     return '<p class="cifras"><b>' + esc(nombre) + ':</b> ✔ ' + x.aciertos + ' · ✘ ' + x.errores + ' · 🤷 ' + x.nose + ' · ⏱ ' + seg(x.tiempo) + '</p>';
   }
   function reclamarVictoria(d, r) {
+    if (r === 1 && window.Album) Album.evento('desafio-ganado', d.id);
     if (r !== 1 || d.res[yo.uid].bono) return;
     var o = {}; o['res.' + yo.uid + '.bono'] = true;
     Nube.actualizar('desafios/' + d.id, o).then(function () { sumarRanking(PUNTOS.victoria); }).catch(function () {});
@@ -896,14 +899,19 @@
       return Promise.all(pasos).then(function () { App.reemplazar('online-sala', { codigo: codigo }); });
     }).catch(function (e) { b.disabled = false; fallo(e); });
   }
-  P['online-unirse'] = function (raiz) {
+  P['online-unirse'] = function (raiz, datos) {
     conectar(raiz, 'Entrar con código', function () {
       raiz._codigo = '';
       raiz.innerHTML = cabecera('Entrar con código') +
-        '<p class="ol-intro">Tocá los caracteres del código que te pasó el organizador:</p>' +
+        '<button class="btn-escanear" data-on="escanear-qr"><span>📷</span><b>Escanear el QR</b><small>Apuntá con la cámara al código de la pantalla</small></button>' +
+        '<p class="ol-intro">O tocá los caracteres del código que te pasó el organizador:</p>' +
         '<div class="casillas-codigo">' + [0, 1, 2, 3, 4, 5].map(function () { return '<span class="casilla"></span>'; }).join('') + '</div>' +
         tecladoCodigoHTML('tecla', 'tecla-borrar') +
         '<button class="btn-principal" data-on="entrar-sala" disabled>Entrar</button>';
+      // Vino con un código (QR escaneado con la cámara común, o enlace): entrar directo
+      var c = (datos && datos.codigo) || Escaner.pendiente();
+      Escaner.borrarPendiente();
+      if (c) { raiz._codigo = c; pintarCodigo(raiz); entrarSala(raiz); }
     });
   };
   function pintarCodigo(raiz) {
@@ -959,6 +967,8 @@
 
       function clave(s) { return s.estado + ':' + s.indice; }
       function pintarSala() {
+        // Modo proyector: el organizador que no juega ve la sala en grande (para mostrarla en una pantalla o proyector)
+        raiz.classList.toggle('modo-proyector', !!(st.soyOrg && st.sala && !st.sala.juega));
         var s = st.sala, k = clave(s);
         if (k === st.mostrado) return;
         st.mostrado = k;
@@ -972,11 +982,15 @@
 
       function pintarEspera() {
         var s = st.sala, md = modoDuelo(s);
-        zona.innerHTML = '<div class="sala-codigo"><small>Código de la sala</small><b>' + codigo + '</b></div>' +
+        zona.innerHTML = '<div class="sala-codigo' + (st.soyOrg ? ' con-qr' : '') + '">' +
+            (st.soyOrg ? '<div class="sala-qr">' + Escaner.qrSVG(Escaner.enlaceSala(codigo)) + '</div>' : '') +
+            '<div class="sala-cod-txt"><small>Código de la sala</small><b>' + codigo + '</b>' +
+            (st.soyOrg ? '<small class="qr-ayuda">📷 Escaneá el QR con la cámara, o en la app: Jugar en línea → Duelo en vivo → Entrar con código → Escanear el QR</small>' : '') +
+            '</div></div>' +
           '<p class="ol-nota">' + temaTexto(s) + ' · ' + s.preguntas.length + ' preguntas · ' + s.seg + ' s cada una</p>' +
           '<div class="aviso-modo"><b>' + md.nombre + '</b><small>' + md.reglas + '</small><small>Si empatan: gana el de menos errores; si siguen empatados, el que tardó menos.</small></div>' +
           (st.soyOrg
-            ? '<p class="ol-intro">Compartí este código. Los jugadores entran desde <b>Jugar en línea → Duelo en vivo → Entrar con código</b>.</p>' +
+            ? '<p class="ol-intro">Compartí el código o mostrá el QR. Los jugadores entran desde <b>Jugar en línea → Duelo en vivo → Entrar con código</b>.</p>' +
               '<h3 class="ol-sub">Jugadores: <span class="cant">0</span> / ' + MAX_SALA + '</h3><div class="nube-jugadores"></div>' +
               '<p class="ol-nota falta-jugadores"></p>' +
               '<button class="btn-principal" data-on="comenzar-duelo" disabled>▶ Comenzar</button>'
@@ -1140,6 +1154,11 @@
         var podio = s.podio || [];
         if (juego && pos && !st.sumado) {
           st.sumado = true;
+          if (window.Album) {
+            Album.evento('duelo-jugado');
+            if (pos === 1 && podio.length >= 2) Album.evento('duelo-ganado');
+            setTimeout(function () { Album.revisar(); }, 2500);
+          }
           Nube.doc('salas/' + codigo + '/jugadores/' + yo.uid).then(function (j) {
             // Ranking semanal: nunca resta. (aciertos − errores) x10 si da positivo, +10 por cada ⚡ y bonus de podio
             var pts = rankingNeto(j && j.aciertos, j && j.errores) + (j ? j.rayos || 0 : 0) * PUNTOS.rayo + (PUNTOS.podio[pos - 1] || 0);
@@ -1281,6 +1300,13 @@
         if (raiz._codigo.length < 6) { raiz._codigo += b.dataset.v; pintarCodigo(raiz); }
         break;
       case 'tecla-borrar': Sonido.toque(); raiz._codigo = raiz._codigo.slice(0, -1); pintarCodigo(raiz); break;
+      case 'escanear-qr':
+        Sonido.toque();
+        Escaner.leer().then(function (c) {
+          if (!c || App.raiz.dataset.actual !== 'online-unirse') return;
+          raiz._codigo = c; pintarCodigo(raiz); entrarSala(raiz);
+        });
+        break;
       case 'entrar-sala': Sonido.toque(); entrarSala(raiz); break;
       case 'comenzar-duelo': Sonido.toque(); b.disabled = true; raiz._comenzar(); break;
       case 'cerrar-pregunta': Sonido.toque(); b.disabled = true; raiz._cerrar(); break;

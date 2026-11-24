@@ -12,7 +12,7 @@ window.Musica = (function () {
     banda: 'Banda',
     himnario: 'Himnario'
   };
-  var EN_JUEGO = { 'jugar': 1, 'juego': 1, 'online-quiz': 1, 'online-sala': 1 };
+  var EN_JUEGO = { 'jugar': 1, 'juego': 1, 'online-quiz': 1, 'online-sala': 1, 'diario': 1 };
 
   var audio = new Audio();
   audio.preload = 'auto';

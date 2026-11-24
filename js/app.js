@@ -1,6 +1,6 @@
 // Navegación y pantallas de la app
 (function () {
-  var VERSION = '2.15.5';
+  var VERSION = '2.16.0';
   var raiz = document.getElementById('pantalla');
   var historial = [];
   var estado = { testamento: 'AT', mecanica: 'tocar' };
@@ -14,7 +14,8 @@
     { id: 'daniel', nombre: 'La estatua de Daniel 2', icono: '👑', listo: true },
     { id: 'versiculos', nombre: 'Versículos', icono: '📖', listo: true },
     { id: 'nombres', nombre: 'Aprendamos sobre nombres', icono: '👥', listo: true },
-    { id: 'remedios', nombre: 'Los 8 remedios naturales', icono: '🌿', listo: true }
+    { id: 'remedios', nombre: 'Los 8 remedios naturales', icono: '🌿', listo: true },
+    { id: 'sopa', nombre: 'Sopa de letras', icono: '🔤', listo: true }
   ];
 
   var CLUBES = {
@@ -27,7 +28,7 @@
   function modulo(id) { return {
       mandamientos: window.JuegoMandamientos, creacion: window.JuegoCreacion, plagas: window.JuegoPlagas,
       santuario: window.JuegoSantuario, daniel: window.JuegoDaniel, versiculos: window.JuegoVersiculos,
-      nombres: window.JuegoNombres, remedios: window.JuegoRemedios, libros: window.JuegoLibros
+      nombres: window.JuegoNombres, remedios: window.JuegoRemedios, libros: window.JuegoLibros, sopa: window.JuegoSopa
     }[id]; }
 
   // Pasa a la pantalla de resultado sin cortar la frase del personaje (mínimo 3 s a la vista)
@@ -239,17 +240,23 @@
           '<button class="club-actual" data-accion="cambiar-club" aria-label="Cambiar club o personaje">' +
             (p.club === 'ninguno' ? '' : '<img src="img/logos/' + p.club + '.png" alt="">') + CLUBES[p.club] +
             '<span class="cambiar">✎</span></button>' +
+          '<button class="btn-album" data-accion="album" aria-label="Mi álbum de personajes"><span>🃏</span>' + Album.conteo() + '/' + Album.total + '</button>' +
           '<button class="btn-icono" data-accion="ajustes" aria-label="Ajustes">⚙</button>' +
         '</header>' +
         '<div class="menu-heroe">' + personajeHTML('grande') + '</div>' +
         '<button class="banner-online" data-accion="online">' + (Apariencia.clasica() ? '<span class="bo-icono">🌐</span>' : '') +
           '<span class="bo-texto"><b>Jugar en línea</b><small>Duelos, desafíos con amigos y ranking</small></span>' +
           '<span class="bo-flecha">›</span></button>' +
+        Diario.bannerHTML() +
         '<div class="mapa">' + islas + '</div>' +
         '<p class="version-app">Arca de Juegos Bíblicos · versión ' + VERSION + '</p>';
       var cont = raiz.querySelector('.personaje');
       setTimeout(function () { Personaje.decir(cont, Azar.frase('saludo'), 'saludando'); }, 350);
       Actualizacion.enMenu(raiz);
+      // Tarjetas del álbum ganadas fuera de los juegos (duelos, desafíos, amigos)
+      setTimeout(function () { if (raiz.dataset.actual === 'menu') Album.revisar(); }, 900);
+      // Llegó un enlace o QR de una sala (?sala=…): ir directo a entrar al duelo
+      if (window.Escaner && Escaner.pendiente()) setTimeout(function () { if (raiz.dataset.actual === 'menu') ir('online'); }, 500);
     },
 
     testamento: function () {
@@ -323,6 +330,8 @@
         if (i >= 0 && i + 1 < lista.length) sig = lista[i + 1];
       }
       raiz._ultimo = r;
+      Album.evento('partida', r);
+      setTimeout(function () { if (raiz.dataset.actual === 'resultado') Album.revisar(); }, 1800);
       raiz.innerHTML =
         '<div class="resultado">' +
           '<h1>' + r.titulo + '</h1>' +
@@ -456,6 +465,8 @@
       }
       case 'a-etapas': historial = []; ir('menu', null, true); ir('testamento'); ir('etapas'); break;
       case 'ajustes': abrirAjustes(); break;
+      case 'diario': Sonido.toque(); ir('diario'); break;
+      case 'album': Sonido.toque(); ir('album'); break;
       case 'online':
         Actualizacion.consultar().then(function (nueva) {
           if (nueva) Actualizacion.exigir('Para jugar en línea necesitás la última versión de la app.');

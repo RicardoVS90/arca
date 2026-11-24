@@ -1278,3 +1278,146 @@ body:not(.clasico) .modo-imagen { width: 3.6rem; height: 3.2rem; object-fit: con
 .teclado-qwerty.teclado-cod { margin: 4px 0 14px; }
 .teclado-qwerty .tecla.apagada { opacity: .28; box-shadow: none; background: #EEF1F5; }
 .nota-teclas { margin: -6px 0 14px; text-align: center; font-size: .88rem; line-height: 1.3; }
+
+/* ---------- Sopa de letras ---------- */
+.sopa-grilla { display: grid; grid-template-columns: repeat(var(--t), 1fr); gap: 3px; width: min(100%, 460px); margin: 4px auto 12px;
+  background: #fff; padding: 6px; border-radius: 16px; box-shadow: var(--sombra); touch-action: none; user-select: none; -webkit-user-select: none; }
+.sopa-celda { aspect-ratio: 1; display: grid; place-items: center; font-weight: 800; font-size: clamp(.95rem, 4.6vw, 1.35rem);
+  border-radius: 8px; color: var(--tinta, #1D3557); background: #F3F6FA; transition: background .12s, transform .12s; }
+.sopa-celda.hallada { background: var(--c); color: #1D2B3A; }
+.sopa-celda.sel { background: #FFE45C !important; transform: scale(1.06); }
+.sopa-celda.inicio { outline: 3px solid #F59E0B; outline-offset: -3px; }
+.sopa-celda.mal { background: #F87171 !important; color: #fff !important; }
+.sopa-celda.pista { animation: brillo-gen 1s ease-in-out 3; outline: 3px solid #FACC15; outline-offset: -3px; }
+.sopa-palabras { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; padding: 0 4px 12px; }
+.sopa-palabra { background: #fff; border-radius: 999px; padding: 5px 12px; font-weight: 800; box-shadow: 0 2px 0 rgba(29,53,87,.12); }
+.sopa-palabra.hallada { background: var(--c); text-decoration: line-through; text-decoration-thickness: 2px; opacity: .85; }
+.sopa-palabra.pista { animation: brillo-gen 1s ease-in-out 3; outline: 3px solid #FACC15; }
+
+/* ---------- Desafío diario ---------- */
+.banner-diario { position: relative; flex: none; display: flex; align-items: center; gap: 12px; width: 100%; min-height: 76px; margin: 4px 0 12px;
+  padding: 10px 14px; border-radius: 22px; text-align: left; color: #fff;
+  background: linear-gradient(135deg, #FFB547 0%, #FF8A3D 55%, #F26B3A 100%); box-shadow: 0 5px 0 #C24E22, 0 10px 20px rgba(242,107,58,.28); }
+.banner-diario.hecho { background: linear-gradient(135deg, #5CCB8A 0%, #2FA866 100%); box-shadow: 0 5px 0 #1E7A48, 0 10px 20px rgba(47,168,102,.25); }
+.banner-diario .dr-icono { font-size: 2.2rem; line-height: 1; }
+.banner-diario .dr-texto { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.banner-diario .dr-texto b { font-size: 1.12rem; }
+.banner-diario .dr-texto small { font-weight: 700; opacity: .95; }
+.banner-diario .dr-racha { flex: none; background: rgba(255,255,255,.95); color: #C2410C; font-weight: 900; border-radius: 999px; padding: 6px 10px; font-size: .92rem; }
+.banner-diario.hecho .dr-racha { color: #166534; }
+.diario-vers { background: #fff; border-radius: 18px; padding: 14px 16px; margin: 6px 0 14px; box-shadow: var(--sombra); border-left: 6px solid #FF8A3D; }
+.diario-vers small { display: block; font-weight: 800; color: #C2410C; margin-bottom: 6px; }
+.diario-vers p { margin: 0 0 6px; font-size: 1.06rem; line-height: 1.45; }
+.diario-vers b { display: block; text-align: right; color: var(--tinta-suave); }
+.diario-fin { text-align: center; display: grid; gap: 10px; justify-items: center; margin-top: 10px; }
+.diario-fin > span { font-size: 3.4rem; }
+.diario-fin h2, .diario-fin p { margin: 0; }
+.diario-fin .btn-principal { width: 100%; }
+.diario-racha { background: #FFF1E0; border-radius: 16px; padding: 10px 14px; width: 100%; display: grid; gap: 2px; }
+.diario-racha b { font-size: 1.2rem; color: #C2410C; }
+.diario-racha small { color: var(--tinta-suave); font-weight: 700; }
+.tarjeta-roja { background: #FDE2E0; border: 2px solid #E04A3F; color: #7F1D1D; border-radius: 16px; padding: 12px 14px; text-align: left; animation: entrar .3s ease-out; }
+.tarjeta-roja b { display: block; margin-bottom: 4px; }
+
+/* ---------- Modo iglesia: QR, lector y proyector ---------- */
+.btn-escanear { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 12px; align-items: center; width: 100%;
+  padding: 12px 16px; margin: 4px 0 14px; border-radius: 20px; text-align: left; color: #fff;
+  background: linear-gradient(135deg, #3B9BE8, #2563C9); box-shadow: 0 5px 0 #1D4B9A; }
+.btn-escanear span { grid-row: 1 / 3; font-size: 2.2rem; }
+.btn-escanear b { font-size: 1.12rem; }
+.btn-escanear small { font-weight: 700; opacity: .92; }
+.sala-codigo.con-qr { display: flex; align-items: center; gap: 14px; text-align: left; }
+.sala-qr { flex: none; width: 132px; height: 132px; background: #fff; border-radius: 12px; }
+.sala-qr svg { width: 100%; height: 100%; display: block; }
+.sala-cod-txt { flex: 1; min-width: 0; }
+.sala-codigo.con-qr b { font-size: 2.2rem; letter-spacing: .12em; }
+.qr-ayuda { display: block; margin-top: 4px; font-size: .8rem; line-height: 1.25; }
+.lector-qr { text-align: center; display: grid; gap: 12px; }
+.lector-qr h2 { margin: 0; }
+.lector-marco { position: relative; width: 100%; aspect-ratio: 1; border-radius: 18px; overflow: hidden; background: #000; }
+.lector-marco video { width: 100%; height: 100%; object-fit: cover; }
+.lector-guia { position: absolute; inset: 15%; border: 4px solid #FFE45C; border-radius: 16px; box-shadow: 0 0 0 999px rgba(0,0,0,.35); }
+
+/* Organizador que no juega: todo en grande para proyectar (en pantallas anchas usa el ancho completo) */
+.pantalla.modo-proyector { max-width: 1200px; }
+@media (min-width: 900px) {
+  .modo-proyector .sala-codigo.con-qr { justify-content: center; gap: 36px; padding: 24px; }
+  .modo-proyector .sala-qr { width: 300px; height: 300px; }
+  .modo-proyector .sala-codigo.con-qr b { font-size: 5rem; }
+  .modo-proyector .qr-ayuda { font-size: 1.1rem; max-width: 420px; }
+  .modo-proyector .tarjeta-quiz { font-size: 2rem; padding: 28px; }
+  .modo-proyector .tarjeta-quiz p { font-size: 1.6rem; }
+  .modo-proyector .opciones-quiz { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .modo-proyector .op-quiz { font-size: 1.6rem; padding: 22px; }
+  .modo-proyector .op-quiz .letra-op { font-size: 1.4rem; width: 2.2em; height: 2.2em; }
+  .modo-proyector .reloj { height: 46px; }
+  .modo-proyector .reloj-num { font-size: 1.6rem; }
+  .modo-proyector .num-quiz, .modo-proyector .contador-resp { font-size: 1.4rem; }
+  .modo-proyector .resp-correcta { font-size: 2.2rem; }
+  .modo-proyector .fila-rank { font-size: 1.4rem; padding: 12px 18px; }
+  .modo-proyector .nube-jugadores .chip-jugador { font-size: 1.3rem; }
+  .modo-proyector .barra-juego, .modo-proyector .ol-cab { font-size: 1.3rem; }
+}
+@media (min-width: 900px) {
+  .modo-proyector .tarjeta-quiz b { font-size: 1.7rem; }
+  .modo-proyector .op-quiz:disabled { opacity: 1; }
+}
+
+/* ---------- Álbum de personajes ---------- */
+.btn-album { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 999px; background: #fff; font-weight: 900;
+  box-shadow: var(--sombra); margin-left: auto; margin-right: 8px; color: var(--tinta, #1D3557); }
+.btn-album span { font-size: 1.2rem; }
+.album-resumen { text-align: center; margin: 4px 0 12px; display: grid; gap: 2px; }
+.album-resumen b { font-size: 1.25rem; }
+.album-resumen small { color: var(--tinta-suave); font-weight: 700; }
+.album-grilla { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding-bottom: 20px; }
+.album-slot { display: block; padding: 0; background: none; text-align: center; }
+.carta-album { position: relative; background: linear-gradient(160deg, #FFF8E1, #FFE6A8); border: 3px solid #E7B740; border-radius: 16px;
+  padding: 6px 6px 8px; box-shadow: 0 4px 0 #C99620; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; }
+.ca-img { position: relative; width: 100%; aspect-ratio: 1; border-radius: 12px; background: linear-gradient(160deg, #BFE3FF, #8EC9F5); overflow: hidden;
+  display: grid; place-items: center; }
+.ca-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ca-ini { font-size: 1.8rem; font-weight: 900; color: rgba(255,255,255,.95); text-shadow: 0 2px 0 rgba(0,0,0,.15); }
+.ca-nombre { font-size: .82rem; line-height: 1.1; }
+.ca-num { font-size: .7rem; color: #8A6A10; font-weight: 800; }
+.album-slot.bloqueada .carta-album { background: #E9EEF4; border-color: #C8D2DE; box-shadow: 0 4px 0 #AEBACB; }
+.album-slot.bloqueada .ca-img { background: #CBD5E1; }
+.album-slot.bloqueada .ca-ini { font-size: 2.4rem; color: #fff; }
+.ca-como { font-size: .66rem; line-height: 1.15; color: var(--tinta-suave); font-weight: 700; }
+.carta-album.grande { width: 200px; margin: 0 auto; }
+.carta-album.grande .ca-nombre { font-size: 1.05rem; }
+.carta-album.grande .ca-ini { font-size: 3.6rem; }
+.album-nueva, .album-detalle { text-align: center; display: grid; gap: 10px; }
+.album-nueva h2 { margin: 0; }
+.album-detalle p { margin: 0; text-align: left; line-height: 1.4; }
+.ad-ref { text-align: center !important; color: var(--tinta-suave); font-weight: 800; }
+.ad-cita { background: #E8F4FD; border-radius: 12px; padding: 8px 12px; }
+.ad-dato { background: #FFF6CC; border-radius: 12px; padding: 8px 12px; }
+.sobre { position: relative; width: 200px; margin: 0 auto; perspective: 800px; }
+.sobre .carta-album { transform: rotateY(90deg) scale(.8); transition: transform .5s ease .25s; }
+.sobre-tapa { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; font-size: 4rem; border-radius: 16px;
+  background: linear-gradient(135deg, #FF8A3D, #E01E37); box-shadow: 0 6px 0 #8E0C20; transition: transform .35s ease, opacity .35s ease; }
+.sobre.abierto .sobre-tapa { transform: rotateY(-90deg); opacity: 0; }
+.sobre.abierto .carta-album { transform: rotateY(0) scale(1); }
+.an-txt { margin: 0; }
+/* Álbum: tarjetas con el dibujo completo */
+.carta-album .ca-full { display: none; }
+.carta-album.con-img { padding: 0; background: none; border: none; box-shadow: none; aspect-ratio: 320 / 483; }
+.carta-album.con-img .ca-full { display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 4px 0 rgba(29,53,87,.18)); }
+.carta-album.con-img .ca-img, .carta-album.con-img .ca-nombre { display: none; }
+.carta-album.con-img .ca-num { position: absolute; bottom: 6px; right: 8px; background: rgba(255,255,255,.9); border-radius: 999px; padding: 1px 7px; }
+.album-slot.bloqueada .carta-album { aspect-ratio: 320 / 483; justify-content: center; }
+.album-slot.bloqueada .ca-img { width: 80%; }
+.carta-album.grande.con-img { width: 210px; }
+.sobre .carta-album.con-img { width: 100%; }
+/* Álbum: avance hacia las tarjetas que faltan */
+.ca-avance { font-size: .64rem; line-height: 1.15; font-weight: 800; color: #B45309; }
+.ca-barra { display: block; width: 86%; height: 6px; border-radius: 999px; background: #D5DDE7; overflow: hidden; }
+.ca-barra i { display: block; height: 100%; background: linear-gradient(90deg, #FBBF24, #F59E0B); border-radius: inherit; }
+.album-falta h2 { margin: 0; }
+.album-falta .af-como { text-align: center !important; font-weight: 800; font-size: 1.1rem; }
+.af-avance { display: grid; gap: 6px; justify-items: center; background: #FFF6CC; border-radius: 14px; padding: 10px; }
+.af-avance .ca-avance { font-size: 1rem; }
+.af-avance .ca-barra { height: 12px; width: 100%; }
+.carta-album.bloq { background: #E9EEF4; border-color: #C8D2DE; box-shadow: 0 4px 0 #AEBACB; width: 150px; }
+.carta-album.bloq .ca-img { background: #CBD5E1; }
