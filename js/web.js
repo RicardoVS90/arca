@@ -3,6 +3,15 @@
   if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) return;
   if (location.protocol !== 'https:' && location.hostname !== 'localhost') return;
 
+  // Celular acostado en el navegador: el navegador no deja trabar la pantalla,
+  // así que se tapa con un aviso hasta que lo vuelvan a parar (solo lo muestra el CSS
+  // en pantallas táctiles chicas y acostadas; en tablets y PC no aparece nunca).
+  var giro = document.createElement('div');
+  giro.className = 'aviso-girar';
+  giro.setAttribute('role', 'alert');
+  giro.innerHTML = '<div class="ag-icono">📱<span>↻</span></div><b>Girá el celular</b><span>Arca se juega con el celular parado</span>';
+  document.body.appendChild(giro);
+
   // Funcionar sin conexión: guarda el juego en el teléfono la primera vez que se abre.
   // Cuando se publica una versión nueva, se baja sola y aparece un aviso para aplicarla al tocar.
   if ('serviceWorker' in navigator) {

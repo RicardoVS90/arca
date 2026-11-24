@@ -1,6 +1,6 @@
 // Generado por herramientas/preparar-web.py — no editar a mano.
 // Versión web: guarda todo el juego en el teléfono para que funcione sin conexión.
-var CACHE = "arca-2.16.0-c71d6f5778";
+var CACHE = "arca-2.16.1-0cafa5cd5c";
 var ARCHIVOS = [
 "./",
 "css/app.css",

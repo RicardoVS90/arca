@@ -1421,3 +1421,38 @@ body:not(.clasico) .modo-imagen { width: 3.6rem; height: 3.2rem; object-fit: con
 .af-avance .ca-barra { height: 12px; width: 100%; }
 .carta-album.bloq { background: #E9EEF4; border-color: #C8D2DE; box-shadow: 0 4px 0 #AEBACB; width: 150px; }
 .carta-album.bloq .ca-img { background: #CBD5E1; }
+
+/* ---------- Celular acostado en el navegador ---------- */
+.aviso-girar { display: none; }
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .aviso-girar {
+    display: flex; position: fixed; inset: 0; z-index: 9999;
+    flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+    background: linear-gradient(180deg, var(--cielo-1), var(--cielo-2) 60%, #FFF6DA);
+    color: var(--tinta); text-align: center; padding: 20px;
+  }
+  .aviso-girar b { font-size: 1.8rem; font-weight: 800; }
+  .aviso-girar > span { font-size: 1.15rem; color: var(--tinta-suave); }
+  .ag-icono { font-size: 4rem; line-height: 1; position: relative; animation: ag-girar 2.2s ease-in-out infinite; }
+  .ag-icono span { position: absolute; right: -0.7em; top: -0.2em; font-size: .6em; color: var(--primario); }
+  @keyframes ag-girar { 0%, 35% { transform: rotate(90deg); } 60%, 100% { transform: rotate(0deg); } }
+}
+
+/* ---------- Pantalla acostada y ancha (tablet horizontal, PC) ----------
+   En los juegos con dibujo (creación, estatua, santuario, tablas, papiro, Egipto) el dibujo va a la
+   izquierda y las cartas/opciones a la derecha, así todo entra sin bajar y se puede arrastrar
+   de un lado al otro. Los juegos de preguntas siguen en una columna. */
+@media (orientation: landscape) and (min-width: 900px) and (min-height: 520px) {
+  .pantalla:has(> .contenido-juego > :is(.escena, .escenario-daniel, .plano, .tablas, .papiro, .egipto)) { max-width: 1120px; }
+  .contenido-juego:has(> :is(.escena, .escenario-daniel, .plano, .tablas, .papiro, .egipto)) {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 22px; row-gap: 12px;
+    align-content: start; align-items: start; padding-bottom: 40px;
+  }
+  .contenido-juego > :is(.escena, .escenario-daniel, .plano, .tablas, .papiro, .egipto) {
+    grid-column: 1; grid-row: 1 / span 12; position: sticky; top: 0;
+  }
+  .contenido-juego:has(> :is(.escena, .escenario-daniel, .plano, .tablas, .papiro, .egipto)) > :not(.escena, .escenario-daniel, .plano, .tablas, .papiro, .egipto) { grid-column: 2; }
+  body .contenido-juego > .escena { max-height: calc(100vh - 130px); max-width: calc(100vh - 130px); }
+  .contenido-juego > .plano { max-height: calc(100vh - 130px); max-width: calc((100vh - 130px) * .75); }
+  .contenido-juego > .tablas .tabla-piedra { min-height: calc(100vh - 160px); }
+}
