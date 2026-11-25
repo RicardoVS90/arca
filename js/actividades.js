@@ -41,16 +41,16 @@
 
   var ACT = {
     carpa: {
-      clubs: ['conquistadores'],
-      // La carpa está delante: el conquistador trabaja desde atrás, acomodando la lona por arriba
-      medio: '<g class="ac-carpa"><path d="M10 266 L100 178 L190 266 Z" fill="#F08A3C" stroke="#B85A1E" stroke-width="4" stroke-linejoin="round"/>' +
-        '<path d="M100 178 L82 266 L118 266 Z" fill="#C8662A"/><path d="M100 178 V266" stroke="#8C4416" stroke-width="3"/>' +
-        '<path d="M100 178 L10 266 M100 178 L190 266" stroke="#B85A1E" stroke-width="2" opacity=".5"/></g>' +
-        '<circle class="ac-punta-carpa" cx="100" cy="176" r="5" fill="' + MADERA_OSC + '"/>' +
-        '<rect x="6" y="256" width="9" height="12" rx="2" fill="' + MADERA_OSC + '"/><rect x="185" y="256" width="9" height="12" rx="2" fill="' + MADERA_OSC + '"/>'
+      clubs: ['conquistadores'], ciclo: 9000, capa: 'frente',
+      // Arrodillado detrás de la carpa: la carpa va adelante de todo; solo se ven el torso, la cabeza y las manos en la punta
+      medio: '',
+      frente: '<g class="ac-carpa"><path d="M14 268 L100 204 L186 268 Z" fill="#F08A3C" stroke="#B85A1E" stroke-width="4" stroke-linejoin="round"/>' +
+        '<path d="M100 204 L84 268 L116 268 Z" fill="#C8662A"/><path d="M100 204 V268" stroke="#8C4416" stroke-width="3"/></g>' +
+        '<g class="ac-punta-carpa"><rect x="96" y="194" width="8" height="14" rx="3" fill="' + MADERA_OSC + '"/></g>' +
+        '<rect x="8" y="258" width="9" height="12" rx="2" fill="' + MADERA_OSC + '"/><rect x="183" y="258" width="9" height="12" rx="2" fill="' + MADERA_OSC + '"/>'
     },
     fogata: {
-      clubs: ['conquistadores'], der: 'pantalla', izq: 'ramita',
+      clubs: ['conquistadores'], ciclo: 5000, der: 'pantalla', izq: 'ramita',
       medio: '<g class="ac-fogata" transform="translate(100 266) scale(.78) translate(-100 -262)">' +
         '<ellipse cx="100" cy="262" rx="52" ry="8" fill="#7E858D"/>' +
         [52, 70, 88, 112, 130, 148].map(function (x, i) { return '<ellipse cx="' + x + '" cy="' + (262 - (i % 2) * 2) + '" rx="10" ry="7" fill="' + (i % 2 ? '#9AA1A9' : '#7E858D') + '"/>'; }).join('') +
@@ -61,26 +61,26 @@
         '<circle class="ac-chispa ac-chispa1" cx="92" cy="204" r="2.2" fill="#FFD23F"/><circle class="ac-chispa ac-chispa2" cx="110" cy="198" r="2.2" fill="#FF8A1F"/></g>'
     },
     portico: {
-      clubs: ['conquistadores'], der: 'cuerda',
+      clubs: ['conquistadores'], ciclo: 5000, der: 'cuerda',
       medio: '<g class="ac-portico"><rect x="94" y="98" width="12" height="172" rx="4" fill="' + MADERA + '" transform="rotate(32 100 184)"/>' +
         '<rect x="94" y="98" width="12" height="172" rx="4" fill="' + MADERA_OSC + '" transform="rotate(-32 100 184)"/>' +
         '<g class="ac-amarre"><path d="M88 172 L112 196 M112 172 L88 196 M86 180 H114 M86 188 H114" stroke="' + CUERDA + '" stroke-width="4" stroke-linecap="round" fill="none"/></g></g>'
     },
     pintar: {
-      clubs: ['aventureros', 'ninguno'], der: 'pincel', izq: 'paleta',
+      clubs: ['aventureros', 'ninguno'], ciclo: 6000, der: 'pincel', izq: 'paleta',
       medio: mesa('<rect x="70" y="194" width="60" height="9" rx="2" fill="#fff" stroke="#D5DCE4" stroke-width="1.5"/>' +
         '<g class="ac-manchas"><ellipse class="ac-m1" cx="82" cy="198" rx="5" ry="2.6" fill="#E5534B"/><ellipse class="ac-m2" cx="94" cy="198" rx="5" ry="2.6" fill="#F2C230"/>' +
         '<ellipse class="ac-m3" cx="106" cy="198" rx="5" ry="2.6" fill="#3BB273"/><ellipse class="ac-m4" cx="118" cy="198" rx="5" ry="2.6" fill="#2F86C9"/></g>' +
         '<rect x="152" y="188" width="14" height="13" rx="3" fill="#7FC8F8" opacity=".85"/><rect x="34" y="190" width="12" height="11" rx="3" fill="#F8B4D9"/>')
     },
     recortar: {
-      clubs: ['aventureros', 'ninguno'], der: 'tijera', izq: 'papel',
+      clubs: ['aventureros', 'ninguno'], ciclo: 8000, der: 'tijera', izq: 'papel',
       medio: mesa('<g class="ac-recortes"><path class="ac-r1" d="M40 200 l5 -10 l5 10 l-10 -6 h10 z" fill="#F2C230"/>' +
         '<path class="ac-r2" d="M152 201 c-5 -6 -11 0 0 6 c11 -6 5 -12 0 -6 z" fill="#E85D8E"/>' +
         '<circle class="ac-r3" cx="62" cy="197" r="5" fill="#2F86C9"/><path class="ac-r4" d="M132 202 l5 -9 l5 9 z" fill="#3BB273"/></g>')
     },
     perrito: {
-      clubs: ['aventureros', 'ninguno'],
+      clubs: ['aventureros', 'ninguno'], ciclo: 4000,
       medio: '<g transform="translate(-4 -10)"><g class="ac-perro">' +
         '<g class="ac-cola"><path d="M124 176 C140 170 144 156 138 150" stroke="#C98A4B" stroke-width="7" fill="none" stroke-linecap="round"/></g>' +
         '<ellipse cx="104" cy="182" rx="30" ry="20" fill="#D9A066"/>' +
@@ -116,16 +116,19 @@
     // El brazo izquierdo va delante del cuerpo mientras trabaja (normalmente está detrás)
     if (!izq._lugar) izq._lugar = izq.nextSibling;
     var atras = capa(svg, 'ac-atras', todo), medio = capa(svg, 'ac-medio', der);
+    var frente = svg.querySelector('.ac-frente');
+    if (!frente) { frente = document.createElementNS(NS, 'g'); frente.setAttribute('class', 'ac-frente'); svg.appendChild(frente); }
     var hd = svg.querySelector('.pj-herr-der'), hi = svg.querySelector('.pj-herr-izq');
     if (!id) {
       delete cont.dataset.act;
-      atras.innerHTML = ''; medio.innerHTML = ''; hd.innerHTML = ''; hi.innerHTML = '';
+      atras.innerHTML = ''; medio.innerHTML = ''; frente.innerHTML = ''; hd.innerHTML = ''; hi.innerHTML = '';
       if (izq._lugar) todo.insertBefore(izq, izq._lugar);
       return;
     }
     var a = ACT[id];
     atras.innerHTML = a.atras || '';
     medio.innerHTML = a.medio || '';
+    frente.innerHTML = a.frente || '';
     hd.innerHTML = a.der ? HERR[a.der] : '';
     hi.innerHTML = a.izq ? HERR[a.izq] : '';
     der.parentNode.insertBefore(izq, der); // delante del cuerpo y de la mesa
@@ -137,5 +140,8 @@
     cont.classList.toggle('act-' + id, !si);
   }
 
-  window.Actividades = { lista: deClub, poner: poner, pausar: pausar, _ACT: ACT };
+  // Cuánto dura una actividad antes de pasar a otra: 2 repeticiones de su ciclo
+  function duracion(id) { return ACT[id] ? ACT[id].ciclo * 2 : 9000; }
+
+  window.Actividades = { lista: deClub, poner: poner, pausar: pausar, duracion: duracion, _ACT: ACT };
 })();

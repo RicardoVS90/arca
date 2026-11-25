@@ -1556,18 +1556,24 @@ body:not(.clasico) .ajuste-colores { display: block; }
 .act-pintar .pj-cabeza, .act-recortar .pj-cabeza, .act-fogata .pj-cabeza, .act-carpa .pj-cabeza { animation: mirar-abajo 2.4s ease-in-out infinite alternate; }
 @keyframes mirar-abajo { from { transform: translateY(3px) rotate(-3deg); } to { transform: translateY(4px) rotate(3deg); } }
 
-/* Carpa adelante: desde atrás, con las dos manos acomoda la punta de la lona mientras la carpa se levanta */
-.act-carpa .pj-brazo-der { transform: rotate(10deg); }
-.act-carpa .pj-brazo-izq { transform: rotate(-10deg); }
-.act-carpa .pj-antebrazo-der { animation: lona-d 1.3s ease-in-out infinite alternate; }
-.act-carpa .pj-antebrazo-izq { animation: lona-i 1.3s ease-in-out infinite alternate; }
-@keyframes lona-d { from { transform: rotate(58deg); } to { transform: rotate(78deg); } }
-@keyframes lona-i { from { transform: rotate(-58deg); } to { transform: rotate(-78deg); } }
+/* Carpa: arrodillado detrás de la carpa; con las dos manos sostiene la punta mientras la carpa se levanta */
+.act-carpa .pj-piernas, .act-carpa .pj-sombra { opacity: 0; }
+.act-carpa .pj-todo { animation: arrodillado 2.6s ease-in-out infinite; }
+@keyframes arrodillado { 0%,100% { transform: translateY(46px); } 50% { transform: translateY(44px) scale(1.01,.99); } }
+.act-carpa .pj-brazo-der { transform: rotate(4deg); }
+.act-carpa .pj-brazo-izq { transform: rotate(-4deg); }
+.act-carpa .pj-antebrazo-der { animation: lona-d 9s ease-in-out infinite; }
+.act-carpa .pj-antebrazo-izq { animation: lona-i 9s ease-in-out infinite; }
+@keyframes lona-d { 0% { transform: rotate(34deg); } 55% { transform: rotate(88deg); } 62% { transform: rotate(80deg); } 70% { transform: rotate(92deg); } 78% { transform: rotate(80deg); } 86%,92% { transform: rotate(88deg); } 100% { transform: rotate(34deg); } }
+@keyframes lona-i { 0% { transform: rotate(-34deg); } 55% { transform: rotate(-88deg); } 62% { transform: rotate(-80deg); } 70% { transform: rotate(-92deg); } 78% { transform: rotate(-80deg); } 86%,92% { transform: rotate(-88deg); } 100% { transform: rotate(-34deg); } }
 .act-carpa .pj-cabeza { animation: mirar-abajo 2.4s ease-in-out infinite alternate; }
-.ac-carpa { transform-origin: 100px 266px; animation: carpa-sube 9s ease-in-out infinite; }
+.ac-frente * { transform-box: view-box; }
+.ac-carpa { transform-origin: 100px 268px; animation: carpa-sube 9s ease-in-out infinite; }
 .ac-punta-carpa { animation: punta-carpa 9s ease-in-out infinite; }
-@keyframes carpa-sube { 0% { transform: scaleY(.45); } 55%,92% { transform: scaleY(1); } 100% { transform: scaleY(.45); } }
-@keyframes punta-carpa { 0% { transform: translateY(48px); } 55%,92% { transform: translateY(0); } 100% { transform: translateY(48px); } }
+@keyframes carpa-sube { 0% { transform: scaleY(.4); } 55%,92% { transform: scaleY(1); } 100% { transform: scaleY(.4); } }
+@keyframes punta-carpa { 0% { transform: translateY(38px); } 55%,92% { transform: translateY(0); } 100% { transform: translateY(38px); } }
+.sin-trabajo .ac-frente { opacity: 0; }
+.ac-frente { transition: opacity .2s; }
 
 /* Fogata adelante: la aviva con la pantalla (mano derecha) y acomoda las brasas con una ramita (izquierda) */
 .act-fogata .pj-brazo-der { transform: rotate(10deg); }

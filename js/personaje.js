@@ -58,6 +58,7 @@
     s += '<g class="pj-todo">';
 
     // Piernas
+    s += '<g class="pj-piernas">';
     if (nina) {
       var yP = k.piernaY + 8;
       s += '<rect x="' + (pIzq + 1) + '" y="' + yP + '" width="' + (pW - 2) + '" height="' + (250 - yP) + '" rx="8" fill="' + piel + '"/>';
@@ -73,6 +74,7 @@
     }
     s += '<ellipse cx="' + (pIzq + pW / 2) + '" cy="252" rx="15" ry="8" fill="' + c.zapatos + '"/>';
     s += '<ellipse cx="' + (pDer + pW / 2) + '" cy="252" rx="15" ry="8" fill="' + c.zapatos + '"/>';
+    s += '</g>';
 
     // Brazo izquierdo
     var aIc = k.aIzq + k.aW / 2, aDc = k.aDer + k.aW / 2, manoY = k.aY + k.aH + 2;
@@ -202,10 +204,14 @@
           if (conAct) Actividades.pausar(cont, false);
         }, DURA[g] + demora + 60);
       }
+      // Cada actividad se repite 2 veces y pasa a otra al azar; a veces queda sin objetos (solo gestos)
       function otraActividad() {
         if (!acts.length) return;
-        var a; do { a = acts[Math.floor(Math.random() * acts.length)]; } while (acts.length > 1 && a === cont.dataset.act);
-        Actividades.poner(cont, a);
+        var opciones = acts.concat(['libre']), a;
+        do { a = opciones[Math.floor(Math.random() * opciones.length)]; } while (a === (cont.dataset.act || 'libre'));
+        Actividades.poner(cont, a === 'libre' ? null : a);
+        clearTimeout(cont._rotar);
+        cont._rotar = setTimeout(function () { if (vigente()) otraActividad(); }, a === 'libre' ? 9000 : Actividades.duracion(a));
       }
       function siguiente() {
         clearTimeout(cont._vivo);
