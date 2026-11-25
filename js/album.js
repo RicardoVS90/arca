@@ -168,8 +168,8 @@
         return d.tiene[t.id]
           ? '<button class="album-slot" data-id="' + t.id + '">' + tarjetaHTML(t) + '</button>'
           : '<button class="album-slot bloqueada" data-falta="' + t.id + '"><div class="carta-album"><div class="ca-img"><span class="ca-ini">?</span></div>' +
-            '<small class="ca-como">' + comoSeGana(t) + '</small>' + avanceHTML(avance(t)) +
-            '<small class="ca-num">' + t.n + '/' + A.tarjetas.length + '</small></div></button>';
+            '<div class="ca-info"><small class="ca-como">' + comoSeGana(t) + '</small>' + avanceHTML(avance(t)) +
+            '<small class="ca-num">' + t.n + '/' + A.tarjetas.length + '</small></div></div></button>';
       }).join('') + '</div>';
     ui.cont.addEventListener('click', function (ev) {
       var f = ev.target.closest('.album-slot[data-falta]');

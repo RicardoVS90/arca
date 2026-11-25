@@ -1,6 +1,6 @@
 // Navegación y pantallas de la app
 (function () {
-  var VERSION = '2.16.2';
+  var VERSION = '2.16.3';
   var raiz = document.getElementById('pantalla');
   var historial = [];
   var estado = { testamento: 'AT', mecanica: 'tocar' };
@@ -240,7 +240,7 @@
           '<button class="club-actual" data-accion="cambiar-club" aria-label="Cambiar club o personaje">' +
             (p.club === 'ninguno' ? '' : '<img src="img/logos/' + p.club + '.png" alt="">') + CLUBES[p.club] +
             '<span class="cambiar">✎</span></button>' +
-          '<button class="btn-album" data-accion="album" aria-label="Mi álbum de personajes"><span>🃏</span>' + Album.conteo() + '/' + Album.total + '</button>' +
+          '<button class="btn-album" data-accion="album" aria-label="Mi álbum de personajes"><span class="ic" data-arte="album-icono">🃏</span>' + Album.conteo() + '/' + Album.total + '</button>' +
           '<button class="btn-icono" data-accion="ajustes" aria-label="Ajustes">⚙</button>' +
         '</header>' +
         '<div class="menu-heroe">' + personajeHTML('grande') + '</div>' +
@@ -252,6 +252,7 @@
         '<p class="version-app">Arca de Juegos Bíblicos · versión ' + VERSION + '</p>';
       var cont = raiz.querySelector('.personaje');
       setTimeout(function () { Personaje.decir(cont, Azar.frase('saludo'), 'saludando'); }, 350);
+      Personaje.vivo(cont, raiz, 'menu', perfil());
       Actualizacion.enMenu(raiz);
       // Tarjetas del álbum ganadas fuera de los juegos (duelos, desafíos, amigos)
       setTimeout(function () { if (raiz.dataset.actual === 'menu') Album.revisar(); }, 900);
@@ -365,6 +366,9 @@
           '<button class="chip-estilo' + (Apariencia.clasica() ? '' : ' activo') + '" data-accion="apariencia" data-valor="moderna">✨ Moderna</button>' +
           '<button class="chip-estilo' + (Apariencia.clasica() ? ' activo' : '') + '" data-accion="apariencia" data-valor="clasica">🧸 Clásica</button>' +
         '</div></div>' +
+        '<div class="ajuste-musica ajuste-colores"><b>Colores</b><div class="colores-tema">' + Apariencia.TEMAS.map(function (t) {
+          return '<button class="color-tema' + (Apariencia.tema() === t.id ? ' activo' : '') + '" data-accion="tema-color" data-valor="' + t.id + '" aria-label="' + t.nombre + '" title="' + t.nombre + '" style="--c1:' + t.c1 + ';--c2:' + t.c2 + '"></button>';
+        }).join('') + '</div></div>' +
         '<div class="ajuste-musica"><b>Estilo de la música</b><div class="estilos-musica">' + Object.keys(Musica.ESTILOS).map(function (k) {
           return '<button class="chip-estilo' + (Musica.estilo() === k ? ' activo' : '') + '" data-accion="estilo-musica" data-estilo="' + k + '">' + Musica.ESTILOS[k] + '</button>';
         }).join('') + '</div></div>' +
@@ -487,6 +491,11 @@
         Apariencia.cambiar(b.dataset.valor);
         document.querySelectorAll('.estilos-apariencia .chip-estilo').forEach(function (c) { c.classList.toggle('activo', c === b); });
         if (raiz.dataset.actual === 'menu') ir('menu');
+        break;
+      case 'tema-color':
+        Apariencia.cambiarTema(b.dataset.valor);
+        document.querySelectorAll('.colores-tema .color-tema').forEach(function (c) { c.classList.toggle('activo', c === b); });
+        try { Sonido.toque(); } catch (e) {}
         break;
       case 'estilo-musica':
         Musica.cambiarEstilo(b.dataset.estilo);

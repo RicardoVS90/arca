@@ -1,6 +1,6 @@
 // Generado por herramientas/preparar-web.py — no editar a mano.
 // Versión web: guarda todo el juego en el teléfono para que funcione sin conexión.
-var CACHE = "arca-2.16.2-dbc53b6ed2";
+var CACHE = "arca-2.16.3-35c3cbb656";
 var ARCHIVOS = [
 "./",
 "css/app.css",
@@ -41,6 +41,7 @@ var ARCHIVOS = [
 "img/album/pedro.webp",
 "img/album/rahab.webp",
 "img/album/rebeca.webp",
+"img/album/reverso.webp",
 "img/album/rut.webp",
 "img/album/salomon.webp",
 "img/album/samuel.webp",
@@ -124,6 +125,7 @@ var ARCHIVOS = [
 "img/menu/isla-sopa.webp",
 "img/menu/isla-versiculos.webp",
 "img/menu/parque.webp",
+"img/modos/album-icono.webp",
 "img/modos/amigos.webp",
 "img/modos/balanza.webp",
 "img/modos/barca.webp",
@@ -133,8 +135,10 @@ var ARCHIVOS = [
 "img/modos/carpa-lupa.webp",
 "img/modos/carpas.webp",
 "img/modos/catalejo.webp",
+"img/modos/chill.webp",
 "img/modos/corazones.webp",
 "img/modos/corona.webp",
+"img/modos/desafio-dia.webp",
 "img/modos/detective.webp",
 "img/modos/examen.webp",
 "img/modos/faraon.webp",
@@ -144,12 +148,14 @@ var ARCHIVOS = [
 "img/modos/mochila.webp",
 "img/modos/pergamino-lupa.webp",
 "img/modos/pergamino.webp",
+"img/modos/relampago.webp",
 "img/modos/sopa-at.webp",
 "img/modos/sopa-discipulos.webp",
 "img/modos/sopa-lugares.webp",
 "img/modos/sopa-nt.webp",
 "img/modos/sopa-personajes.webp",
 "img/modos/sopa-tribus.webp",
+"img/modos/vacio.webp",
 "img/plagas/egipto.webp",
 "img/plagas/plaga-01.webp",
 "img/plagas/plaga-02.webp",
@@ -188,6 +194,7 @@ var ARCHIVOS = [
 "img/santuario/incienso.webp",
 "img/santuario/mesa.webp",
 "img/santuario/plano.webp",
+"js/actividades.js",
 "js/actualizacion.js",
 "js/album.js",
 "js/app.js",

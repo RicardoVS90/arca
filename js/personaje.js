@@ -76,11 +76,16 @@
 
     // Brazo izquierdo
     var aIc = k.aIzq + k.aW / 2, aDc = k.aDer + k.aW / 2, manoY = k.aY + k.aH + 2;
+    // Brazos con codo: brazo (gira en el hombro) y antebrazo (gira en el codo, solo hacia adentro)
+    var codoY = k.aY + k.aH / 2, medio = k.aH / 2 + k.aW / 2;
     s += '<g class="pj-brazo-izq" style="transform-origin:' + aIc + 'px ' + (k.aY + 6) + 'px">';
-    s += '<rect x="' + k.aIzq + '" y="' + k.aY + '" width="' + k.aW + '" height="' + k.aH + '" rx="' + (k.aW / 2) + '" fill="' + cam + '"/>';
-    s += '<circle cx="' + aIc + '" cy="' + manoY + '" r="10.5" fill="' + piel + '"/>';
+    s += '<rect x="' + k.aIzq + '" y="' + k.aY + '" width="' + k.aW + '" height="' + medio + '" rx="' + (k.aW / 2) + '" fill="' + cam + '"/>';
     if (c.parche) s += '<circle cx="' + aIc + '" cy="' + (k.aY + 16) + '" r="6.5" fill="' + c.parche + '" stroke="#fff" stroke-width="1.5"/>';
-    s += '</g>';
+    s += '<g class="pj-antebrazo-izq" style="transform-origin:' + aIc + 'px ' + codoY + 'px">';
+    s += '<rect x="' + k.aIzq + '" y="' + (codoY - k.aW / 2) + '" width="' + k.aW + '" height="' + (k.aY + k.aH - codoY + k.aW / 2) + '" rx="' + (k.aW / 2) + '" fill="' + cam + '"/>';
+    s += '<g class="pj-herr-izq" transform="translate(' + aIc + ' ' + manoY + ')"></g>';
+    s += '<circle cx="' + aIc + '" cy="' + manoY + '" r="10.5" fill="' + piel + '"/>';
+    s += '</g></g>';
 
     // Torso y parte de abajo
     if (k.borde) {
@@ -125,8 +130,11 @@
 
     // Brazo derecho (el que saluda)
     s += '<g class="pj-brazo-der" style="transform-origin:' + aDc + 'px ' + (k.aY + 6) + 'px">';
-    s += '<rect x="' + k.aDer + '" y="' + k.aY + '" width="' + k.aW + '" height="' + k.aH + '" rx="' + (k.aW / 2) + '" fill="' + cam + '"/>';
-    s += '<circle cx="' + aDc + '" cy="' + manoY + '" r="10.5" fill="' + piel + '"/></g>';
+    s += '<rect x="' + k.aDer + '" y="' + k.aY + '" width="' + k.aW + '" height="' + medio + '" rx="' + (k.aW / 2) + '" fill="' + cam + '"/>';
+    s += '<g class="pj-antebrazo-der" style="transform-origin:' + aDc + 'px ' + codoY + 'px">';
+    s += '<rect x="' + k.aDer + '" y="' + (codoY - k.aW / 2) + '" width="' + k.aW + '" height="' + (k.aY + k.aH - codoY + k.aW / 2) + '" rx="' + (k.aW / 2) + '" fill="' + cam + '"/>';
+    s += '<g class="pj-herr-der" transform="translate(' + aDc + ' ' + manoY + ')"></g>';
+    s += '<circle cx="' + aDc + '" cy="' + manoY + '" r="10.5" fill="' + piel + '"/></g></g>';
 
     // Cabeza (más chica en los jóvenes)
     var cuello = k.tY + 2;
@@ -155,13 +163,14 @@
     if (c.joven) s += '<path d="M74 74 Q83 70 92 74 M108 74 Q117 70 126 74" stroke="' + pelo + '" stroke-width="3" fill="none" stroke-linecap="round"/>';
     s += '<ellipse cx="72" cy="104" rx="8" ry="5" fill="#FF8A80" opacity="' + (c.joven ? '.3' : '.45') + '"/><ellipse cx="128" cy="104" rx="8" ry="5" fill="#FF8A80" opacity="' + (c.joven ? '.3' : '.45') + '"/>';
     s += '<path class="pj-boca" d="M87 106 Q100 120 113 106" fill="none" stroke="#6B3A22" stroke-width="4" stroke-linecap="round"/>';
+    s += '<g class="pj-boca-risa"><path d="M85 103 Q100 128 115 103 Z" fill="#7A2E1C" stroke="#6B3A22" stroke-width="3" stroke-linejoin="round"/><ellipse cx="100" cy="117" rx="7" ry="4" fill="#FF8A80"/></g>';
     s += '</g></g></g></svg>';
     return s;
   }
 
   function animar(el, clase, ms) {
     if (!el) return;
-    el.classList.remove('saludando', 'festejando', 'animando');
+    el.classList.remove('saludando', 'festejando', 'animando', 'mirando', 'saltito', 'riendo', 'acrobacia');
     void el.offsetWidth;
     el.classList.add(clase);
     clearTimeout(el._t);
@@ -170,10 +179,72 @@
 
   window.Personaje = {
     dibujar: dibujar,
-    // Muestra una burbuja de diálogo. Cada frase queda a la vista al menos MIN_MS;
-    // si llega otra antes, espera su turno (solo se guarda la más reciente).
-    MIN_MS: 7000,
-    VISIBLE_MS: 7000,
+    animar: animar,
+    // En el menú: el personaje está haciendo una actividad de su club (solo Moderna), cada tanto la deja
+    // para hacer un gesto, y al tocarlo reacciona: cambia de actividad o hace un gesto al azar.
+    vivo: function (cont, raiz, pantalla, perfil) {
+      if (!cont) return;
+      var conAct = !!(window.Actividades && !(window.Apariencia && Apariencia.clasica()) && perfil);
+      var acts = conAct ? Actividades.lista(perfil.club) : [];
+      var GESTOS = ['saludando', 'mirando', 'saltito', 'riendo', 'animando'], ant = '';
+      var DURA = { saludando: 1600, mirando: 2100, saltito: 700, animando: 1100, festejando: 1600, riendo: 1500, acrobacia: 1200 };
+      function vigente() { return document.body.contains(cont) && raiz.dataset.actual === pantalla; }
+      function gesto(g) {
+        if (conAct) Actividades.pausar(cont, true);
+        // La voltereta la hace solo: sin las herramientas ni las cosas de la actividad
+        if (g === 'acrobacia') cont.classList.add('sin-trabajo');
+        var demora = g === 'acrobacia' ? 220 : 0;
+        clearTimeout(cont._gesto);
+        cont._gesto = setTimeout(function () { animar(cont, g, DURA[g]); }, demora);
+        clearTimeout(cont._retomar);
+        cont._retomar = setTimeout(function () {
+          cont.classList.remove('sin-trabajo');
+          if (conAct) Actividades.pausar(cont, false);
+        }, DURA[g] + demora + 60);
+      }
+      function otraActividad() {
+        if (!acts.length) return;
+        var a; do { a = acts[Math.floor(Math.random() * acts.length)]; } while (acts.length > 1 && a === cont.dataset.act);
+        Actividades.poner(cont, a);
+      }
+      function siguiente() {
+        clearTimeout(cont._vivo);
+        cont._vivo = setTimeout(function () {
+          if (!vigente()) return;
+          if (!document.hidden) {
+            var g; do { g = GESTOS[Math.floor(Math.random() * GESTOS.length)]; } while (g === ant);
+            ant = g; gesto(g);
+          }
+          siguiente();
+        }, (conAct ? 7000 : 4500) + Math.random() * 4000);
+      }
+      cont.addEventListener('click', function () {
+        if (cont._ocupado) return;
+        cont._ocupado = true; setTimeout(function () { cont._ocupado = false; }, 1500);
+        try { Sonido.toque(); } catch (e) {}
+        var b = cont.querySelector('.burbuja');
+        var frase = function () { Personaje.decir(cont, Azar.frase('saludo'), null); };
+        // Al tocarlo: la mitad de las veces cambia de actividad y la otra mitad hace un gesto (con acrobacias)
+        if (conAct && Math.random() < 0.5) { otraActividad(); if (b) frase(); }
+        else {
+          var opciones = ['festejando', 'saludando', 'riendo', 'acrobacia', 'acrobacia', 'saltito'];
+          var g = opciones[Math.floor(Math.random() * opciones.length)];
+          if (b) { cont._desde = 0; Personaje._mostrarSolo(cont, Azar.frase('saludo')); }
+          gesto(g);
+        }
+        siguiente();
+      });
+      // La actividad arranca después del saludo de bienvenida
+      if (conAct) setTimeout(function () { if (vigente()) otraActividad(); }, 1900);
+      siguiente();
+    },
+    // Solo el globito (sin gesto)
+    _mostrarSolo: function (cont, texto) {
+      cont._desde = Date.now();
+      var b = cont.querySelector('.burbuja'); if (!b) return;
+      b.textContent = texto; b.classList.remove('visible'); void b.offsetWidth; b.classList.add('visible');
+      clearTimeout(b._t); b._t = setTimeout(function () { b.classList.remove('visible'); }, this.VISIBLE_MS);
+    },
     decir: function (cont, texto, gesto) {
       if (!cont) return 0;
       var self = this, ahora = Date.now();
@@ -201,7 +272,7 @@
         clearTimeout(b._t);
         b._t = setTimeout(function () { b.classList.remove('visible'); }, this.VISIBLE_MS);
       }
-      animar(cont, gesto || 'animando');
+      if (gesto !== null) animar(cont, gesto || 'animando');
       if (cont._alMostrar) cont._alMostrar();
     },
     // Aparición breve desde abajo durante los juegos

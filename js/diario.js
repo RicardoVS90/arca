@@ -65,7 +65,7 @@
     var e = estado(), hecho = hechoHoy();
     var racha = e.racha > 0 ? '<span class="dr-racha">🔥 ' + e.racha + (e.racha === 1 ? ' día' : ' días') + '</span>' : '';
     return '<button class="banner-diario' + (hecho ? ' hecho' : '') + '" data-accion="diario">' +
-      '<span class="dr-icono">' + (hecho ? '✅' : '🎯') + '</span>' +
+      '<span class="dr-icono"><span class="ic" data-arte="desafio-dia">' + (hecho ? '✅' : '🎯') + '</span></span>' +
       '<span class="dr-texto"><b>' + (hecho ? '¡Desafío de hoy completado!' : 'Desafío de hoy') + '</b>' +
       '<small>' + (hecho ? 'Volvé mañana para seguir tu racha' : 'Versículo del día y ' + N_PREG + ' preguntas') + '</small></span>' +
       racha + '</button>';
@@ -92,7 +92,7 @@
   }
 
   function versiculoHTML(v) {
-    return '<div class="diario-vers"><small>📖 Versículo del día</small><p>“' + v.texto + '”</p><b>' + v.cita + '</b></div>';
+    return '<div class="diario-vers"><small><span class="ic ic-chico" data-arte="biblia">📖</span> Versículo del día</small><p>“' + v.texto + '”</p><b>' + v.cita + '</b></div>';
   }
   function rachaHTML(e) {
     return '<div class="diario-racha"><b>🔥 ' + e.racha + (e.racha === 1 ? ' día seguido' : ' días seguidos') + '</b>' +

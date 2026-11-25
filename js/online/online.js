@@ -455,7 +455,11 @@
     var s = raiz.querySelector(sel);
     if (!s) return;
     s.hidden = !lista.length && !vacio;
-    s.querySelector('.lista').innerHTML = lista.length ? lista.map(fila).join('') : '<p class="vacio">' + (vacio || '') + '</p>';
+    s.querySelector('.lista').innerHTML = lista.length ? lista.map(fila).join('') : (vacio ? vacioHTML(vacio) : '<p class="vacio"></p>');
+  }
+  // Lista vacía: dibujo de un conquistador con aventureros (solo Moderna) y "¡Nada por acá todavía!"
+  function vacioHTML(txt) {
+    return '<div class="vacio-arte"><span class="va-img" aria-hidden="true"></span><b>¡Nada por acá todavía!</b><p class="vacio">' + txt + '</p></div>';
   }
   function enviarSolicitud(uidOtro, aliasOtro, avatarOtro) {
     if (uidOtro === yo.uid) { aviso('¡Ese sos vos! 😄'); return Promise.resolve(); }
@@ -483,7 +487,7 @@
       Nube.consulta('ranking/' + semana() + '_' + club + '/jugadores', { orden: ['puntos', 'desc'], limite: 50 }).then(function (l) {
         var t = raiz.querySelector('.tabla-ranking');
         if (!t) return;
-        if (!l.length) { t.innerHTML = '<p class="vacio">Todavía nadie sumó puntos esta semana. ¡Podés ser el primero!</p>'; return; }
+        if (!l.length) { t.innerHTML = vacioHTML('Todavía nadie sumó puntos esta semana. ¡Podés ser el primero!'); return; }
         var medallas = ['🥇', '🥈', '🥉'];
         t.innerHTML = l.map(function (j, i) {
           var mio = j.id === yo.uid;
@@ -609,7 +613,7 @@
   function temasHTML(sel) {
     return '<div class="zona-temas"><button class="btn-tema btn-todos" data-on="tema-todos"><span>✅</span>Todos</button>' +
       '<div class="grilla-temas">' + PreguntasOnline.TEMAS.map(function (t) {
-        return '<button class="btn-tema" data-on="tema" data-v="' + t.id + '"><span>' + t.icono + '</span>' + t.nombre + '<i class="tilde">✔</i></button>';
+        return '<button class="btn-tema" data-on="tema" data-v="' + t.id + '"><span class="ic-isla" style="--isla:url(../img/menu/isla-' + t.id + '.webp)">' + t.icono + '</span>' + t.nombre + '<i class="tilde">✔</i></button>';
       }).join('') + '</div><p class="ol-nota nota-temas"></p></div>';
   }
   function pintarTemas(raiz, sel) {
@@ -874,7 +878,7 @@
       raiz.innerHTML = cabecera('Organizar duelo') +
         '<h3 class="ol-sub">Temas</h3>' + temasHTML(raiz._org.tema) +
         '<h3 class="ol-sub">Modo de juego</h3><div class="modos-duelo">' + MODOS_DUELO.map(function (m) {
-          return '<button class="btn-modo' + (m.id === 'relampago' ? ' activa' : '') + '" data-on="modo-org" data-v="' + m.id + '"><b>' + m.nombre + '</b><small>' + m.explica + '</small></button>';
+          return '<button class="btn-modo' + (m.id === 'relampago' ? ' activa' : '') + '" data-on="modo-org" data-v="' + m.id + '"><b><span class="ic ic-modo" data-arte="' + m.id + '">' + m.nombre.split(' ')[0] + '</span> ' + m.nombre.split(' ').slice(1).join(' ') + '</b><small>' + m.explica + '</small></button>';
         }).join('') + '</div>' +
         '<h3 class="ol-sub">Preguntas</h3><div class="chips" data-grupo="n">' + [5, 10, 15, 20].map(function (n) {
           return '<button class="chip' + (n === 10 ? ' activa' : '') + '" data-on="opcion-org" data-c="n" data-v="' + n + '">' + n + '</button>'; }).join('') + '</div>' +

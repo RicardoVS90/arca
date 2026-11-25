@@ -93,11 +93,38 @@
   }
 
   // Selección: arrastrar o tocar inicio y fin. Solo líneas rectas (horizontal, vertical o diagonal).
+  // La celda se calcula por la posición del dedo en la grilla (no por el elemento tocado), así los
+  // espacios entre letras no cortan la selección, y al arrastrar la línea se "imanta" a la dirección
+  // recta más cercana (ideal para las diagonales). Al soltar se comprueba la línea que se ve marcada.
   function activar(grilla) {
-    var ini = null, marcadas = [], arrastrando = false, movio = false;
-    function deEvento(ev) {
-      var el = document.elementFromPoint(ev.clientX, ev.clientY);
-      return el && el.classList && el.classList.contains('sopa-celda') ? el : null;
+    var T = s.grilla.length, ini = null, tocada = null, marcadas = [], arrastrando = false, movio = false;
+    function geo() {
+      var r = grilla.getBoundingClientRect(), cs = getComputedStyle(grilla);
+      var pad = parseFloat(cs.paddingLeft) || 0, gap = parseFloat(cs.columnGap) || 0;
+      var paso = (r.width - 2 * pad + gap) / T;
+      return { x: r.left + pad, y: r.top + pad, paso: paso };
+    }
+    function posicion(ev) { // fila y columna (con decimales) bajo el dedo
+      var g = geo();
+      return { f: (ev.clientY - g.y) / g.paso - 0.5, c: (ev.clientX - g.x) / g.paso - 0.5 };
+    }
+    function dentro(f, c) { return f >= 0 && c >= 0 && f < T && c < T; }
+    function celdaBajo(ev) {
+      var p = posicion(ev), f = Math.round(p.f), c = Math.round(p.c);
+      return dentro(f, c) ? celda(f, c) : null;
+    }
+    function rumbo(a, ev) { // línea desde a hacia el dedo, en la dirección recta más cercana
+      var p = posicion(ev), f0 = +a.dataset.f, c0 = +a.dataset.c, df = p.f - f0, dc = p.c - c0;
+      if (Math.max(Math.abs(df), Math.abs(dc)) < 0.5) return [a];
+      var ang = Math.round(Math.atan2(df, dc) / (Math.PI / 4));
+      var uf = Math.round(Math.sin(ang * Math.PI / 4)), uc = Math.round(Math.cos(ang * Math.PI / 4));
+      var k = Math.round((df * uf + dc * uc) / (uf * uf + uc * uc));
+      var out = [];
+      for (var i = 0; i <= Math.max(0, k); i++) {
+        if (!dentro(f0 + uf * i, c0 + uc * i)) break;
+        out.push(celda(f0 + uf * i, c0 + uc * i));
+      }
+      return out;
     }
     function linea(a, b) {
       var f0 = +a.dataset.f, c0 = +a.dataset.c, f1 = +b.dataset.f, c1 = +b.dataset.c;
@@ -112,42 +139,45 @@
       marcadas = lista || [];
       marcadas.forEach(function (x) { x.classList.add('sel'); });
     }
-    function terminar(fin) {
-      var l = fin ? linea(ini, fin) : null;
-      marcar([]);
+    function marcarInicio(c) {
       grilla.querySelectorAll('.inicio').forEach(function (x) { x.classList.remove('inicio'); });
-      ini = null;
-      if (l && l.length >= 2) comprobar(l);
+      if (c) c.classList.add('inicio');
     }
     grilla.addEventListener('pointerdown', function (ev) {
       if (s.bloqueado) return;
-      var c = deEvento(ev); if (!c) return;
+      var c = celdaBajo(ev); if (!c) return;
       ev.preventDefault();
       Voz.cortarPregunta && Voz.cortarPregunta();
-      if (ini && ini !== c && !arrastrando) { terminar(c); return; } // segundo toque: marca la línea
       ini = c; arrastrando = true; movio = false;
-      grilla.querySelectorAll('.inicio').forEach(function (x) { x.classList.remove('inicio'); });
-      c.classList.add('inicio');
       marcar([c]);
       try { grilla.setPointerCapture(ev.pointerId); } catch (e) {}
     });
     grilla.addEventListener('pointermove', function (ev) {
       if (!arrastrando || !ini) return;
-      var c = deEvento(ev); if (!c) return;
-      if (c !== ini) movio = true;
-      var l = linea(ini, c); if (l) marcar(l);
+      var l = rumbo(ini, ev);
+      if (l.length >= 2) movio = true;
+      marcar(l);
     });
     grilla.addEventListener('pointerup', function (ev) {
       if (!arrastrando) return;
       arrastrando = false;
-      var c = deEvento(ev);
-      if (movio && c && c !== ini) terminar(c);
-      // Si solo tocó una letra, queda marcada como inicio: el próximo toque marca el final
+      var l = marcadas.slice(), c = ini; ini = null;
+      marcar([]);
+      if (movio && l.length >= 2) { tocada = null; marcarInicio(null); comprobar(l); return; }
+      // Toque sin arrastrar: el primero marca el inicio y el segundo el final
+      if (tocada && tocada !== c) {
+        var t = linea(tocada, c); tocada = null; marcarInicio(null);
+        if (t) comprobar(t); else { tocada = c; marcarInicio(c); }
+        return;
+      }
+      if (tocada === c) { tocada = null; marcarInicio(null); return; } // tocar dos veces la misma: se suelta
+      tocada = c; marcarInicio(c);
     });
-    grilla.addEventListener('pointercancel', function () { arrastrando = false; terminar(null); });
+    grilla.addEventListener('pointercancel', function () { arrastrando = false; ini = null; marcar([]); });
   }
 
-  function comprobar(celdas) {
+  // Busca la palabra que forman esas celdas (en cualquier sentido)
+  function buscar(celdas) {
     var txt = celdas.map(function (x) { return x.textContent; }).join('');
     var rev = txt.split('').reverse().join('');
     var p = s.palabras.filter(function (w) {
@@ -157,18 +187,23 @@
       return mias.length === celdas.length && (mias.every(function (x, i) { return x === celdas[i]; }) ||
         mias.every(function (x, i) { return x === celdas[celdas.length - 1 - i]; }));
     })[0];
-    if (!p) {
-      // Si coincide con una palabra pero en otro lugar, igual vale (sin castigo)
-      var otra = s.palabras.filter(function (w) { return !w.hallada && (w.limpia === txt || w.limpia === rev); })[0];
-      if (otra) { encontrada(otra, celdas); return; }
-      if (celdas.length >= 3) {
-        Sonido.error(); s.errores++; s.seguidos++;
-        celdas.forEach(function (x) { x.classList.add('mal'); setTimeout(function () { x.classList.remove('mal'); }, 2000); });
-        if (s.seguidos === 3) Personaje.aparecer(app.perfil(), Azar.frase('animo'), 'animando');
-      }
-      return;
+    // Si coincide con una palabra pero en otro lugar, igual vale (sin castigo)
+    return p || s.palabras.filter(function (w) { return !w.hallada && (w.limpia === txt || w.limpia === rev); })[0] || null;
+  }
+
+  function comprobar(celdas) {
+    var p = buscar(celdas);
+    // Si el dedo se pasó una letra de largo, igual vale
+    if (!p && celdas.length > 3) { var menos = celdas.slice(0, -1); p = buscar(menos); if (p) celdas = menos; }
+    if (p) { encontrada(p, celdas); return; }
+    // Volver a marcar una palabra que ya encontró no es un error
+    var txt = celdas.map(function (x) { return x.textContent; }).join(''), rev = txt.split('').reverse().join('');
+    if (s.palabras.some(function (w) { return w.hallada && (w.limpia === txt || w.limpia === rev); })) return;
+    if (celdas.length >= 3) {
+      Sonido.error(); s.errores++; s.seguidos++;
+      celdas.forEach(function (x) { x.classList.add('mal'); setTimeout(function () { x.classList.remove('mal'); }, 2000); });
+      if (s.seguidos === 3) Personaje.aparecer(app.perfil(), Azar.frase('animo'), 'animando');
     }
-    encontrada(p, celdas);
   }
 
   function encontrada(p, celdas) {

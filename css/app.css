@@ -10,6 +10,9 @@
   --blanco: #FFFFFF;
   --primario: #2F86C9;
   --primario-osc: #1F6AA5;
+  --cielo-3: #FFF6DA;
+  --suave: #E3F1FC;
+  --suave-2: #F3F7FB;
   --acento: #FFC93C;
   --exito: #3BB273;
   --error: #E5534B;
@@ -23,7 +26,7 @@ body {
   font-family: 'Baloo', system-ui, sans-serif;
   font-weight: 500;
   color: var(--tinta);
-  background: linear-gradient(180deg, var(--cielo-1), var(--cielo-2) 60%, #FFF6DA);
+  background: linear-gradient(180deg, var(--cielo-1), var(--cielo-2) 60%, var(--cielo-3));
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
@@ -113,6 +116,12 @@ h2 { font-size: 1.5rem; }
 @keyframes brazo-arriba-d { 0%,100% { transform: rotate(0); } 15%,85% { transform: rotate(-160deg); } }
 @keyframes brazo-arriba-i { 0%,100% { transform: rotate(0); } 15%,85% { transform: rotate(160deg); } }
 
+/* Gestos sueltos del personaje del menú */
+.mirando .pj-cabeza { animation: mirar 2s ease-in-out; }
+@keyframes mirar { 0%,100% { transform: rotate(0); } 20%,40% { transform: rotate(-9deg); } 60%,80% { transform: rotate(9deg); } }
+.saltito .pj-todo { animation: saltar .6s cubic-bezier(.3,.7,.4,1) 1; }
+.saltito .pj-sombra { animation: sombra-salto .6s cubic-bezier(.3,.7,.4,1) 1; }
+.menu-heroe .personaje { cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .animando .pj-cabeza { animation: asentir .9s ease-in-out; }
 .animando .pj-brazo-der { animation: puno 1s ease-in-out; }
 @keyframes asentir { 0%,100% { transform: rotate(0) translateY(0); } 25%,75% { transform: translateY(4px); } 50% { transform: translateY(-2px); } }
@@ -731,7 +740,7 @@ button.club-actual:active { transform: translateY(3px); box-shadow: 0 3px 0 rgba
 .marcador-2 { grid-template-columns: repeat(2, 1fr); max-width: 320px; margin: 0 auto; }
 
 /* ---------- Ajustes de voz y botón de silencio ---------- */
-.ajuste-voz { display: grid; gap: 8px; background: #F3F7FB; border-radius: 16px; padding: 10px 12px; }
+.ajuste-voz { display: grid; gap: 8px; background: var(--suave-2); border-radius: 16px; padding: 10px 12px; }
 .ajuste-voz b { font-size: 1.05rem; }
 .selector-voz { width: 100%; font-family: inherit; font-size: 1rem; padding: 8px; border-radius: 12px; border: 2px solid #D5DEE8; background: #fff; color: var(--tinta); }
 .estilos-voz { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -795,7 +804,7 @@ button.club-actual:active { transform: translateY(3px); box-shadow: 0 3px 0 rgba
 .carga { min-height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 20px; }
 .carga-arca { width: min(70vw, 300px); height: auto; filter: drop-shadow(0 10px 14px rgba(29,53,87,.25)); animation: flotar 2.6s ease-in-out infinite; }
 @keyframes flotar { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-.carga-titulo { margin: 4px 0 6px; font-size: 1.7rem; text-align: center; color: #fff; text-shadow: 0 3px 0 #1F6AA5, 0 6px 10px rgba(29,53,87,.25); }
+.carga-titulo { margin: 4px 0 6px; font-size: 1.7rem; text-align: center; color: #fff; text-shadow: 0 3px 0 var(--primario-osc), 0 6px 10px rgba(29,53,87,.25); }
 .carga-barra { width: min(80vw, 320px); height: 22px; border-radius: 999px; background: rgba(255,255,255,.7); box-shadow: inset 0 2px 4px rgba(29,53,87,.2); overflow: hidden; border: 3px solid #fff; }
 .carga-relleno { width: 0; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #FFC93C, #F4A51C); transition: width .15s linear; }
 .carga-texto { margin: 0; font-weight: 800; color: var(--tinta); }
@@ -803,7 +812,7 @@ button.club-actual:active { transform: translateY(3px); box-shadow: 0 3px 0 rgba
 /* ---------- Bienvenida ---------- */
 .bienvenida { min-height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 0 6px; max-width: 560px; margin: 0 auto; }
 .bv-titulo { margin: 6px 0 0; text-align: center; font-size: 1.45rem; line-height: 1.2; color: var(--tinta); }
-.bv-titulo span { display: inline-block; font-size: 1.9rem; color: #fff; text-shadow: 0 3px 0 #1F6AA5, 0 6px 10px rgba(29,53,87,.25); }
+.bv-titulo span { display: inline-block; font-size: 1.9rem; color: #fff; text-shadow: 0 3px 0 var(--primario-osc), 0 6px 10px rgba(29,53,87,.25); }
 .bv-grupo { position: relative; width: 100%; display: flex; flex-direction: column; align-items: center; }
 .bv-fila { display: flex; justify-content: center; align-items: flex-end; }
 .bv-atras { gap: 18px; }
@@ -851,7 +860,7 @@ button.club-actual:active { transform: translateY(3px); box-shadow: 0 3px 0 rgba
 
 /* =================== Jugar en línea =================== */
 .banner-online { display: flex; align-items: center; gap: 12px; width: 100%; margin: 4px 0 18px; padding: 12px 16px;
-  border-radius: var(--radio); background: linear-gradient(135deg, #6C5CE7, #2F86C9); color: #fff; box-shadow: var(--sombra); text-align: left; }
+  border-radius: var(--radio); background: linear-gradient(135deg, #6C5CE7, var(--primario)); color: #fff; box-shadow: var(--sombra); text-align: left; }
 .banner-online:active { transform: translateY(3px); box-shadow: 0 3px 0 rgba(29,53,87,.18); }
 .bo-icono { font-size: 2.1rem; }
 .bo-texto { flex: 1; display: flex; flex-direction: column; }
@@ -912,7 +921,7 @@ button.club-actual:active { transform: translateY(3px); box-shadow: 0 3px 0 rgba
 .alias-estado.usado { color: #B42318; }
 .alias-columnas { display: grid; grid-template-columns: 1fr 1.25fr 1.15fr .62fr; gap: 6px; }
 .col-alias { background: #fff; border-radius: 16px; box-shadow: 0 3px 0 rgba(29,53,87,.12); overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
-.col-titulo { padding: 6px 4px; text-align: center; font-weight: 800; font-size: .85rem; background: #E3F1FC; line-height: 1.1; min-height: 42px; display: grid; place-items: center; }
+.col-titulo { padding: 6px 4px; text-align: center; font-weight: 800; font-size: .85rem; background: var(--suave); line-height: 1.1; min-height: 42px; display: grid; place-items: center; }
 .col-titulo i { font-weight: 600; font-size: .75rem; color: var(--tinta-suave); }
 .col-lista { height: 230px; overflow-y: auto; overscroll-behavior: contain; padding: 4px; display: flex; flex-direction: column; gap: 3px; }
 .pal { padding: 7px 4px; border-radius: 10px; font-weight: 700; font-size: .88rem; line-height: 1.1; word-break: break-word; background: transparent; }
@@ -922,7 +931,7 @@ button.club-actual:active { transform: translateY(3px); box-shadow: 0 3px 0 rgba
 .btn-avatar.activa { outline: 4px solid var(--primario); outline-offset: 2px; }
 .btn-guardar-alias { margin-top: 18px; }
 .btn-principal:disabled { opacity: .5; }
-.buscar-amigo { background: #F3F7FB; border-radius: var(--radio); padding: 10px; margin-bottom: 8px; }
+.buscar-amigo { background: var(--suave-2); border-radius: var(--radio); padding: 10px; margin-bottom: 8px; }
 .buscar-amigo .btn-principal { margin-top: 10px; }
 .resultado-busqueda { margin-top: 10px; }
 
@@ -932,7 +941,7 @@ button.club-actual:active { transform: translateY(3px); box-shadow: 0 3px 0 rgba
 .fila-ol .nom { flex: 1; min-width: 0; font-weight: 700; line-height: 1.15; display: flex; flex-direction: column; }
 .fila-ol .nom small { font-weight: 600; color: var(--tinta-suave); font-size: .82rem; }
 .fila-ol .pendiente { color: var(--tinta-suave); font-size: .85rem; font-weight: 700; }
-.mini { flex: none; padding: 7px 10px; border-radius: 999px; font-weight: 800; font-size: .88rem; background: #E3F1FC; color: var(--tinta); }
+.mini { flex: none; padding: 7px 10px; border-radius: 999px; font-weight: 800; font-size: .88rem; background: var(--suave); color: var(--tinta); }
 .mini.ok { background: var(--exito); color: #fff; }
 .mini.no { background: #FDE2E0; color: #B42318; }
 .mini:disabled { opacity: .5; }
@@ -970,7 +979,7 @@ button.club-actual:active { transform: translateY(3px); box-shadow: 0 3px 0 rgba
 .op-quiz { display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 16px; background: #fff; text-align: left;
   font-weight: 700; font-size: 1rem; line-height: 1.2; box-shadow: 0 4px 0 rgba(29,53,87,.12); }
 .op-quiz:disabled { cursor: default; }
-.letra-op { flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: #E3F1FC; font-weight: 800; }
+.letra-op { flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--suave); font-weight: 800; }
 .op-quiz.correcta { background: #C9F0D2; box-shadow: 0 0 0 3px #3BB273; }
 .op-quiz.incorrecta { background: #F8B4AE; }
 .op-quiz.elegida { box-shadow: 0 0 0 4px var(--primario); }
@@ -990,7 +999,7 @@ button.club-actual:active { transform: translateY(3px); box-shadow: 0 3px 0 rgba
 .tecla { aspect-ratio: 1; border-radius: 10px; background: #fff; font-weight: 800; font-size: 1.1rem; box-shadow: 0 3px 0 rgba(29,53,87,.14); font-family: ui-monospace, monospace; }
 .tecla:active { transform: translateY(2px); box-shadow: none; }
 .tecla.borrar { background: #FDE2E0; }
-.reloj { position: relative; height: 30px; border-radius: 999px; background: #E3F1FC; overflow: hidden; margin: 2px 0 6px; }
+.reloj { position: relative; height: 30px; border-radius: 999px; background: var(--suave); overflow: hidden; margin: 2px 0 6px; }
 .reloj-barra { height: 100%; width: 100%; background: linear-gradient(90deg, #E5534B, #FFC93C, #3BB273); transition: width .2s linear; }
 .reloj-num { position: absolute; inset: 0; display: grid; place-items: center; font-weight: 800; }
 .barra-org { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 12px; font-weight: 700; color: var(--tinta-suave); }
@@ -1039,11 +1048,11 @@ button.club-actual:active { transform: translateY(3px); box-shadow: 0 3px 0 rgba
 .fila-numero { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px; padding: 10px; border-radius: 16px; background: #fff; box-shadow: 0 3px 0 rgba(29,53,87,.1); }
 .fn-titulo { display: flex; flex-direction: column; line-height: 1.1; margin-right: 2px; }
 .fn-titulo small { color: var(--tinta-suave); font-weight: 600; font-size: .8rem; }
-.chip-num { padding: 8px 12px; border-radius: 999px; background: #E3F1FC; font-weight: 800; font-size: .9rem; }
+.chip-num { padding: 8px 12px; border-radius: 999px; background: var(--suave); font-weight: 800; font-size: .9rem; }
 .chip-num.activa { background: var(--primario); color: #fff; }
 .ruedas { display: flex; gap: 4px; }
 .ruedas.vacias { opacity: .5; }
-.rueda { display: flex; flex-direction: column; align-items: center; background: #F3F7FB; border-radius: 12px; overflow: hidden; }
+.rueda { display: flex; flex-direction: column; align-items: center; background: var(--suave-2); border-radius: 12px; overflow: hidden; }
 .rueda button { width: 38px; height: 26px; font-size: .8rem; color: var(--primario-osc); }
 .rueda b { font-size: 1.4rem; font-family: ui-monospace, monospace; line-height: 1.2; }
 .nom .antes { font-weight: 600; color: var(--tinta-suave); font-size: .78rem; font-style: italic; }
@@ -1101,7 +1110,7 @@ body:not(.clasico) .bo-flecha { position: absolute; right: 12px; bottom: 8px; wi
 body:not(.clasico) img.bv-parque { object-fit: cover; object-position: center bottom; }
 body:not(.clasico) .isla .isla-estrellas, body:not(.clasico) .isla .isla-pronto { margin-top: 2px; }
 body:not(.clasico) .mapa { grid-auto-rows: auto; }
-body:not(.clasico) .isla, body:not(.clasico) .isla:nth-child(even) { background: linear-gradient(180deg, #FFFFFF 0%, #E3F6FF 55%, #A9DDF5 100%); }
+body:not(.clasico) .isla, body:not(.clasico) .isla:nth-child(even) { background: linear-gradient(180deg, #FFFFFF 0%, var(--isla-2, #E3F6FF) 55%, var(--isla-3, #A9DDF5) 100%); }
 body:not(.clasico) .banner-online::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(255,255,255,.75) 0%, rgba(255,255,255,.45) 45%, rgba(255,255,255,0) 62%); }
 body:not(.clasico) .banner-online > * { position: relative; }
 body:not(.clasico) .banner-online .bo-flecha { position: absolute; }
@@ -1428,7 +1437,7 @@ body:not(.clasico) .modo-imagen { width: 3.6rem; height: 3.2rem; object-fit: con
   .aviso-girar {
     display: flex; position: fixed; inset: 0; z-index: 9999;
     flex-direction: column; align-items: center; justify-content: center; gap: 6px;
-    background: linear-gradient(180deg, var(--cielo-1), var(--cielo-2) 60%, #FFF6DA);
+    background: linear-gradient(180deg, var(--cielo-1), var(--cielo-2) 60%, var(--cielo-3));
     color: var(--tinta); text-align: center; padding: 20px;
   }
   .aviso-girar b { font-size: 1.8rem; font-weight: 800; }
@@ -1470,3 +1479,165 @@ body:not(.clasico) .ic[data-arte="pergamino"] { background-image: url(../img/mod
 body:not(.clasico) .ic[data-arte="sopa-nt"] { background-image: url(../img/modos/sopa-nt.webp); }
 body:not(.clasico) .ic[data-arte="catalejo"] { background-image: url(../img/modos/catalejo.webp); }
 body:not(.clasico) .ic[data-arte="mapa"] { background-image: url(../img/modos/mapa.webp); }
+
+/* Organizar duelo / nuevo desafío: cada tema con el dibujo de su isla (solo Moderna) */
+body:not(.clasico) .btn-tema .ic-isla { font-size: 0 !important; display: block; width: 54px; height: 40px; margin: 0 auto 2px;
+  background: var(--isla) center / contain no-repeat; filter: drop-shadow(0 2px 2px rgba(0,0,0,.25)); }
+body:not(.clasico) .ic[data-arte="biblia"] { background-image: url(../img/modos/biblia.webp); }
+body:not(.clasico) .ic.ic-chico[data-arte] { width: 30px; height: 30px; vertical-align: middle; margin-right: 2px; }
+
+/* Íconos ilustrados: Desafío de hoy, álbum y modos de duelo (solo Moderna) */
+body:not(.clasico) .ic[data-arte="desafio-dia"] { background-image: url(../img/modos/desafio-dia.webp); }
+body:not(.clasico) .ic[data-arte="album-icono"] { background-image: url(../img/modos/album-icono.webp); }
+body:not(.clasico) .ic[data-arte="relampago"] { background-image: url(../img/modos/relampago.webp); }
+body:not(.clasico) .ic[data-arte="chill"] { background-image: url(../img/modos/chill.webp); }
+body:not(.clasico) .dr-icono { display: flex; align-items: center; }
+body:not(.clasico) .dr-icono .ic[data-arte] { width: 58px; height: 58px; }
+body:not(.clasico) .btn-album .ic[data-arte] { width: 30px; height: 30px; filter: none; }
+body:not(.clasico) .btn-modo .ic-modo[data-arte] { width: 40px; height: 40px; vertical-align: middle; margin: -6px 4px -6px 0; }
+
+/* Álbum: las tarjetas que faltan se ven boca abajo (reverso con el arca); el progreso va sobre el agua (solo Moderna) */
+body:not(.clasico) .album-slot.bloqueada .carta-album { aspect-ratio: 320 / 483; height: auto; padding: 0 9% 9%; gap: 2px; justify-content: flex-end;
+  background: url(../img/album/reverso.webp) center / 100% 100% no-repeat; border: none; box-shadow: none;
+  filter: drop-shadow(0 4px 0 rgba(29,53,87,.18)); }
+body:not(.clasico) .album-slot.bloqueada .ca-img { display: none; }
+body:not(.clasico) .album-slot.bloqueada .ca-como { color: #12345A; }
+body:not(.clasico) .album-slot.bloqueada .ca-num { color: #12345A; }
+/* Ficha blanca sobre el reverso con cómo se gana y el avance, para que se lea bien */
+.ca-info { display: flex; flex-direction: column; align-items: center; gap: 3px; width: 100%; }
+body:not(.clasico) .album-slot.bloqueada .ca-info { background: rgba(255,255,255,.94); border-radius: 10px; padding: 5px 4px 4px; box-shadow: 0 2px 0 rgba(18,52,90,.25); }
+body:not(.clasico) .carta-album.bloq { aspect-ratio: 320 / 483; background: url(../img/album/reverso.webp) center / 100% 100% no-repeat; border: none; box-shadow: none; }
+body:not(.clasico) .carta-album.bloq .ca-img { visibility: hidden; }
+
+/* Listas vacías en Jugar en línea */
+.vacio-arte { text-align: center; padding: 6px 0; }
+.vacio-arte b { display: block; font-size: 1.15rem; font-weight: 800; color: var(--tinta); margin-bottom: 2px; }
+.vacio-arte .va-img { display: none; }
+body:not(.clasico) .vacio-arte .va-img { display: block; width: 150px; height: 150px; margin: 4px auto 10px;
+  background: url(../img/modos/vacio.webp) center / contain no-repeat; filter: drop-shadow(0 4px 4px rgba(0,0,0,.18)); }
+body:not(.clasico) .carta-album.bloq .ca-num { position: absolute; left: 50%; bottom: 9%; transform: translateX(-50%); background: rgba(255,255,255,.94);
+  border-radius: 999px; padding: 1px 10px; color: #12345A; }
+
+/* ---------- Colores temáticos (solo apariencia Moderna; celeste es el de siempre) ----------
+   Fondos suaves y botones fuertes. Los colores de acierto (verde) y error (rojo) NO cambian. */
+body.tema-coral:not(.clasico)   { --isla-2: #FFE6DF; --isla-3: #FFBFB0; --cielo-1: #FFB8A8; --cielo-2: #FFEAE3; --cielo-3: #FFF4E6; --primario: #C8492F; --primario-osc: #9C3622; --suave: #FFE3DC; --suave-2: #FFF3EF; --tinta: #3A1F1A; --tinta-suave: #6B4038; }
+body.tema-rosa:not(.clasico)    { --isla-2: #FFE6F2; --isla-3: #FFC4DF; --cielo-1: #FFBEDC; --cielo-2: #FFEAF4; --cielo-3: #FFF5EC; --primario: #C23B7E; --primario-osc: #922A5E; --suave: #FFE0EF; --suave-2: #FFF2F8; --tinta: #3A1630; --tinta-suave: #6E3E5E; }
+body.tema-verde:not(.clasico)   { --isla-2: #E2F6E8; --isla-3: #ADE2BF; --cielo-1: #A9E4BC; --cielo-2: #E8F7EC; --cielo-3: #FFF8E3; --primario: #2C7A4B; --primario-osc: #1E5A36; --suave: #DDF3E4; --suave-2: #F0FAF3; --tinta: #173826; --tinta-suave: #44624F; }
+body.tema-azul:not(.clasico)    { --isla-2: #E4ECFF; --isla-3: #B4C9FF; --cielo-1: #AFC6FF; --cielo-2: #E8EFFF; --cielo-3: #F6F1FF; --primario: #3653C9; --primario-osc: #26399A; --suave: #E0E8FF; --suave-2: #F1F5FF; --tinta: #18234D; --tinta-suave: #47527E; }
+body.tema-naranja:not(.clasico) { --isla-2: #FFEEDB; --isla-3: #FFCF9E; --cielo-1: #FFCB94; --cielo-2: #FFF0DE; --cielo-3: #FFF8E6; --primario: #B85309; --primario-osc: #8C3F06; --suave: #FFE7CC; --suave-2: #FFF5EA; --tinta: #3A2410; --tinta-suave: #6B4A2C; }
+body.tema-violeta:not(.clasico) { --isla-2: #EFE7FF; --isla-3: #CFBBFF; --cielo-1: #CDB6FF; --cielo-2: #F1EAFF; --cielo-3: #FFF4F0; --primario: #7442CF; --primario-osc: #552E9E; --suave: #EAE0FF; --suave-2: #F6F2FF; --tinta: #26184A; --tinta-suave: #574B7E; }
+/* El error se marca también con un borde más grueso y un temblor, para que se note en cualquier color */
+body:not(.clasico) :is(button.mal, .sopa-celda.mal, .tarjeta-libro.mal, .ficha-sel.mal) { box-shadow: inset 0 0 0 3px #B42318 !important; animation: temblor-error .35s ease-in-out; }
+@keyframes temblor-error { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+/* Selector de colores en Ajustes */
+.ajuste-colores { display: none; }
+body:not(.clasico) .ajuste-colores { display: block; }
+.colores-tema { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.color-tema { width: 36px; height: 36px; padding: 0; flex: none; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 2px rgba(0,0,0,.12), 0 3px 0 rgba(0,0,0,.12);
+  background: linear-gradient(135deg, var(--c1) 50%, var(--c2) 50%); }
+.color-tema.activo { box-shadow: 0 0 0 3px var(--tinta), 0 3px 0 rgba(0,0,0,.15); transform: scale(1.08); }
+
+/* ---------- Personaje del menú: risa, acrobacia y actividades (actividades solo en Moderna) ---------- */
+.pj-boca-risa { opacity: 0; }
+.riendo .pj-boca { opacity: 0; }
+.riendo .pj-boca-risa { opacity: 1; }
+.riendo .pj-ojos { animation: none; transform: scaleY(.35); }
+.riendo .pj-todo { animation: risa .26s ease-in-out 6; }
+@keyframes risa { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px) scale(1.01,.99); } }
+.acrobacia .pj-todo { transform-origin: 100px 165px; animation: voltereta 1.15s cubic-bezier(.4,.1,.3,1); }
+.acrobacia .pj-brazo-der { animation: brazo-arriba-d 1.15s ease-in-out; }
+.acrobacia .pj-brazo-izq { animation: brazo-arriba-i 1.15s ease-in-out; }
+.acrobacia .pj-sombra { animation: sombra-salto 1.15s ease-in-out; }
+@keyframes voltereta { 0% { transform: translateY(0) rotate(0); } 22% { transform: translateY(-34px) rotate(0); }
+  78% { transform: translateY(-34px) rotate(-360deg); } 100% { transform: translateY(0) rotate(-360deg); } }
+
+.pj-antebrazo-der, .pj-antebrazo-izq { transform-box: view-box; }
+.ac-atras *, .ac-medio * { transform-box: view-box; }
+.act-pintar .pj-cabeza, .act-recortar .pj-cabeza, .act-fogata .pj-cabeza, .act-carpa .pj-cabeza { animation: mirar-abajo 2.4s ease-in-out infinite alternate; }
+@keyframes mirar-abajo { from { transform: translateY(3px) rotate(-3deg); } to { transform: translateY(4px) rotate(3deg); } }
+
+/* Carpa adelante: desde atrás, con las dos manos acomoda la punta de la lona mientras la carpa se levanta */
+.act-carpa .pj-brazo-der { transform: rotate(10deg); }
+.act-carpa .pj-brazo-izq { transform: rotate(-10deg); }
+.act-carpa .pj-antebrazo-der { animation: lona-d 1.3s ease-in-out infinite alternate; }
+.act-carpa .pj-antebrazo-izq { animation: lona-i 1.3s ease-in-out infinite alternate; }
+@keyframes lona-d { from { transform: rotate(58deg); } to { transform: rotate(78deg); } }
+@keyframes lona-i { from { transform: rotate(-58deg); } to { transform: rotate(-78deg); } }
+.act-carpa .pj-cabeza { animation: mirar-abajo 2.4s ease-in-out infinite alternate; }
+.ac-carpa { transform-origin: 100px 266px; animation: carpa-sube 9s ease-in-out infinite; }
+.ac-punta-carpa { animation: punta-carpa 9s ease-in-out infinite; }
+@keyframes carpa-sube { 0% { transform: scaleY(.45); } 55%,92% { transform: scaleY(1); } 100% { transform: scaleY(.45); } }
+@keyframes punta-carpa { 0% { transform: translateY(48px); } 55%,92% { transform: translateY(0); } 100% { transform: translateY(48px); } }
+
+/* Fogata adelante: la aviva con la pantalla (mano derecha) y acomoda las brasas con una ramita (izquierda) */
+.act-fogata .pj-brazo-der { transform: rotate(10deg); }
+.act-fogata .pj-brazo-izq { transform: rotate(-10deg); }
+.act-fogata .pj-antebrazo-der { animation: abanico-d .34s ease-in-out infinite alternate; }
+.act-fogata .pj-antebrazo-izq { animation: ramita-i 1.6s ease-in-out infinite alternate; }
+@keyframes ramita-i { from { transform: rotate(-12deg); } to { transform: rotate(-30deg); } }
+@keyframes abanico-d { from { transform: rotate(18deg); } to { transform: rotate(42deg); } }
+@keyframes abanico-i { from { transform: rotate(-18deg); } to { transform: rotate(-42deg); } }
+.ac-llama1 { transform-origin: 100px 254px; animation: llama .38s ease-in-out infinite alternate; }
+.ac-llama2 { transform-origin: 100px 254px; animation: llama .3s ease-in-out infinite alternate-reverse; }
+@keyframes llama { from { transform: scale(.94,.84); } to { transform: scale(1.05,1.14); } }
+.ac-chispa { animation: chispa 1.7s ease-out infinite; }
+.ac-chispa2 { animation-delay: .8s; }
+@keyframes chispa { 0% { transform: translate(0,0); opacity: 1; } 100% { transform: translate(8px,-50px); opacity: 0; } }
+
+/* Pórtico adelante: con las dos manos va enrollando la cuerda en el cruce de los palos */
+.act-portico .pj-brazo-der { animation: hombro-d 1s ease-in-out infinite alternate; }
+.act-portico .pj-brazo-izq { animation: hombro-i 1s ease-in-out infinite alternate-reverse; }
+.act-portico .pj-antebrazo-der { animation: enrollar-d 1s ease-in-out infinite alternate; }
+.act-portico .pj-antebrazo-izq { animation: enrollar-i 1s ease-in-out infinite alternate-reverse; }
+@keyframes hombro-d { from { transform: rotate(8deg); } to { transform: rotate(22deg); } }
+@keyframes hombro-i { from { transform: rotate(-8deg); } to { transform: rotate(-22deg); } }
+@keyframes enrollar-d { from { transform: rotate(60deg); } to { transform: rotate(96deg); } }
+@keyframes enrollar-i { from { transform: rotate(-60deg); } to { transform: rotate(-96deg); } }
+.act-portico .pj-cabeza { transform: translateY(2px); }
+.ac-amarre path { stroke-dasharray: 120; animation: amarre 5s ease-in-out infinite; }
+@keyframes amarre { 0% { stroke-dashoffset: 120; } 70%,92% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 120; } }
+
+/* Pintar en la mesita: pincel en una mano, paleta en la otra */
+.act-pintar .pj-brazo-der { transform: rotate(8deg); }
+.act-pintar .pj-brazo-izq { transform: rotate(-8deg); }
+.act-pintar .pj-antebrazo-der { animation: pincelada .6s ease-in-out infinite alternate; }
+.act-pintar .pj-antebrazo-izq { transform: rotate(-34deg); }
+@keyframes pincelada { from { transform: rotate(22deg); } to { transform: rotate(40deg); } }
+.hr-punta { animation: punta 6s steps(1) infinite; }
+@keyframes punta { 0% { fill: #E5534B; } 25% { fill: #F2C230; } 50% { fill: #3BB273; } 75% { fill: #2F86C9; } }
+.ac-manchas ellipse { opacity: 0; animation: mancha 6s ease-out infinite; }
+.ac-m2 { animation-delay: 1.5s !important; } .ac-m3 { animation-delay: 3s !important; } .ac-m4 { animation-delay: 4.5s !important; }
+@keyframes mancha { 0% { opacity: 0; transform: scale(.3); } 8%,80% { opacity: 1; transform: scale(1); } 100% { opacity: 0; } }
+
+/* Recortar: el papel en una mano y la tijera en la otra; los recortes quedan en la mesa */
+.act-recortar .pj-brazo-der { transform: rotate(10deg); }
+.act-recortar .pj-brazo-izq { transform: rotate(-10deg); }
+.act-recortar .pj-antebrazo-der { animation: tijeretazo 1.2s ease-in-out infinite alternate; }
+.act-recortar .pj-antebrazo-izq { animation: girar-papel 2.4s ease-in-out infinite alternate; }
+@keyframes tijeretazo { from { transform: rotate(34deg); } to { transform: rotate(44deg); } }
+@keyframes girar-papel { from { transform: rotate(-36deg); } to { transform: rotate(-46deg); } }
+.act-recortar .hr-hoja1 { animation: hoja1 .3s ease-in-out infinite alternate; }
+.act-recortar .hr-hoja2 { animation: hoja2 .3s ease-in-out infinite alternate; }
+@keyframes hoja1 { from { transform: rotate(0); } to { transform: rotate(-18deg); } }
+@keyframes hoja2 { from { transform: rotate(0); } to { transform: rotate(18deg); } }
+.ac-recortes > * { opacity: 0; animation: mancha 8s ease-out infinite; }
+.ac-r2 { animation-delay: 2s !important; } .ac-r3 { animation-delay: 4s !important; } .ac-r4 { animation-delay: 6s !important; }
+
+/* Perrito en brazos: lo abraza y se mece; el perrito mueve la cola y saca la lengua */
+.act-perrito .pj-brazo-der { transform: rotate(18deg); }
+.act-perrito .pj-brazo-izq { transform: rotate(-18deg); }
+.act-perrito .pj-antebrazo-der { transform: rotate(60deg); }
+.act-perrito .pj-antebrazo-izq { transform: rotate(-60deg); }
+.act-perrito .pj-todo { transform-origin: 100px 262px; animation: mecerse 1.8s ease-in-out infinite alternate; }
+@keyframes mecerse { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }
+.act-perrito .pj-cabeza { transform: rotate(-6deg); }
+.ac-cola { transform-origin: 124px 176px; animation: cola .22s ease-in-out infinite alternate; }
+@keyframes cola { from { transform: rotate(-16deg); } to { transform: rotate(18deg); } }
+.ac-cabeza-perro { transform-origin: 86px 172px; animation: perro-cabeza 1.2s ease-in-out infinite alternate; }
+@keyframes perro-cabeza { from { transform: rotate(-8deg); } to { transform: rotate(6deg); } }
+.ac-corazon { opacity: 0; animation: corazon 3.4s ease-out infinite; }
+@keyframes corazon { 0%,60% { opacity: 0; transform: translateY(0) scale(.6); } 70% { opacity: 1; } 100% { opacity: 0; transform: translateY(-30px) scale(1.2); } }
+
+/* La voltereta la hace solo: las cosas de la actividad desaparecen un momento y vuelven */
+.ac-atras, .ac-medio, .pj-herr-der, .pj-herr-izq { transition: opacity .2s; }
+.sin-trabajo .ac-atras, .sin-trabajo .ac-medio, .sin-trabajo .pj-herr-der, .sin-trabajo .pj-herr-izq { opacity: 0; }

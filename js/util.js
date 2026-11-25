@@ -40,6 +40,8 @@ window.Sonido = {
     try {
       if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
       var c = this.ctx, o = c.createOscillator(), g = c.createGain();
+      // Si el sistema dejó el audio en pausa (sonido que llega sin un toque, o al volver a la app), se reactiva
+      if (c.state !== 'running' && c.resume) c.resume();
       o.type = tipo || 'sine';
       o.frequency.value = frec;
       var t = c.currentTime + inicio;
@@ -80,19 +82,46 @@ window.Sonido = {
   // Premio (tarjeta nueva): arpegio rápido que sube, acorde final y destellos
   premio: function () {
     var n = [784, 988, 1175, 1568];
-    for (var i = 0; i < n.length; i++) this._tono(n[i], i * 0.06, 0.16, 'square', 0.07);
+    for (var i = 0; i < n.length; i++) this._tono(n[i], 0.05 + i * 0.06, 0.16, 'square', 0.1);
     var acorde = [1046, 1319, 1568];
-    for (var j = 0; j < acorde.length; j++) this._tono(acorde[j], 0.26, 0.7, 'triangle', 0.13);
-    this._tono(2093, 0.36, 0.25, 'sine', 0.06); this._tono(2637, 0.48, 0.3, 'sine', 0.05);
+    for (var j = 0; j < acorde.length; j++) this._tono(acorde[j], 0.31, 0.7, 'triangle', 0.18);
+    this._tono(2093, 0.41, 0.25, 'sine', 0.08); this._tono(2637, 0.53, 0.3, 'sine', 0.07);
   }
 };
+// El audio de los efectos se "desbloquea" con el primer toque (los navegadores no dejan sonar sin un toque previo)
+document.addEventListener('pointerdown', function () {
+  try {
+    if (!Sonido.activo()) return;
+    if (!Sonido.ctx) Sonido.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if (Sonido.ctx.state !== 'running' && Sonido.ctx.resume) Sonido.ctx.resume();
+  } catch (e) {}
+}, true);
 
 // Voz: lee los nombres de los libros. En el navegador usa la voz del sistema.
 // En el APK se reemplaza por el plugin de texto a voz de Capacitor (ver docs).
 // Apariencia de la app: 'moderna' (arte ilustrado, por defecto) o 'clasica' (la de la versión 2.6.4)
 window.Apariencia = {
+  // Colores temáticos de la apariencia Moderna (celeste es el de siempre)
+  TEMAS: [
+    { id: 'celeste', nombre: 'Celeste', c1: '#8FD3FF', c2: '#2F86C9' },
+    { id: 'coral', nombre: 'Rojo coral', c1: '#FFB8A8', c2: '#C8492F' },
+    { id: 'rosa', nombre: 'Rosa', c1: '#FFBEDC', c2: '#C23B7E' },
+    { id: 'verde', nombre: 'Verde', c1: '#A9E4BC', c2: '#2C7A4B' },
+    { id: 'azul', nombre: 'Azul', c1: '#AFC6FF', c2: '#3653C9' },
+    { id: 'naranja', nombre: 'Naranja', c1: '#FFCB94', c2: '#B85309' },
+    { id: 'violeta', nombre: 'Violeta', c1: '#CDB6FF', c2: '#7442CF' }
+  ],
+  tema: function () { var t = Almacen.leer('tema', 'celeste'); return this.TEMAS.some(function (x) { return x.id === t; }) ? t : 'celeste'; },
+  cambiarTema: function (t) { Almacen.guardar('tema', t); this.aplicar(); },
   clasica: function () { return Almacen.leer('apariencia', 'moderna') === 'clasica'; },
-  aplicar: function () { document.body.classList.toggle('clasico', this.clasica()); },
+  aplicar: function () {
+    var b = document.body, t = this.tema();
+    b.classList.toggle('clasico', this.clasica());
+    this.TEMAS.forEach(function (x) { b.classList.toggle('tema-' + x.id, x.id === t && t !== 'celeste'); });
+    // La barra del sistema del color del tema
+    var m = document.querySelector('meta[name="theme-color"]');
+    if (m) m.setAttribute('content', this.clasica() ? '#2F86C9' : this.TEMAS.filter(function (x) { return x.id === t; })[0].c2);
+  },
   cambiar: function (v) { Almacen.guardar('apariencia', v === 'clasica' ? 'clasica' : 'moderna'); this.aplicar(); }
 };
 
