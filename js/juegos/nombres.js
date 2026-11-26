@@ -73,7 +73,8 @@
   }
 
   // ---------- ¿Hijo de quién? ----------
-  function respuesta(h) { return h.padre && h.madre ? h.padre + ' y ' + h.madre : (h.padre || h.madre); }
+  var Y = I18n.de(' y ', ' and ', ' e ');
+  function respuesta(h) { return h.padre && h.madre ? h.padre + Y + h.madre : (h.padre || h.madre); }
   function preguntaHijo(h) { return preguntaHijo0(h).replace(' de el ', ' del '); }
   function preguntaHijo0(h) {
     if (h.padre && h.madre) return '¿Quiénes fueron los padres de ' + h.quien + '?';
@@ -85,7 +86,7 @@
     var correcta = respuesta(h), n = nOpciones() - 1;
     // No ofrecer como padre/madre a la misma persona de la pregunta (ej.: "Saúl" para "el rey Saúl")
     var palabras = h.quien.split(/[ ,]+/);
-    function noEsElMismo(nombre) { return nombre.split(' y ').every(function (x) { return palabras.indexOf(x) < 0; }); }
+    function noEsElMismo(nombre) { return nombre.split(Y).every(function (x) { return palabras.indexOf(x) < 0; }); }
     var conAmbos = D.hijos.filter(function (x) { return x.padre && x.madre; });
     var padres = unicos(D.hijos.filter(function (x) { return x.padre; }).map(function (x) { return x.padre; }));
     var madres = unicos(conAmbos.map(function (x) { return x.madre; }).concat(D.madresExtra));
@@ -98,8 +99,8 @@
     var otrasMadres = Azar.mezclar(madres.filter(function (m) { return m !== h.madre; }));
     var mismaMadre = Azar.mezclar(unicos(conAmbos.filter(function (x) { return x.madre === h.madre && x.padre !== h.padre; }).map(function (x) { return x.padre; })));
     var otrosPadres = Azar.mezclar(padres.filter(function (p) { return p !== h.padre && p !== h.quien; }));
-    var a = mismasEsposas.concat(otrasMadres).map(function (m) { return h.padre + ' y ' + m; });
-    var b = mismaMadre.concat(otrosPadres).map(function (p) { return p + ' y ' + h.madre; });
+    var a = mismasEsposas.concat(otrasMadres).map(function (m) { return h.padre + Y + m; });
+    var b = mismaMadre.concat(otrosPadres).map(function (p) { return p + Y + h.madre; });
     var c = Azar.mezclar(conAmbos.map(respuesta));
     var out = unicos([a[0], b[0]].concat(Azar.mezclar(a.slice(1, 4).concat(b.slice(1, 3), c.slice(0, 4)))), [correcta]);
     return out.filter(noEsElMismo).slice(0, n);

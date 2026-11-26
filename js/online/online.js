@@ -32,7 +32,7 @@
     return l.slice().sort(function (a, b) { return -comparar(a, b).gana; });
   }
   function seg(ms) { return Math.round((ms || 0) / 1000) + ' s'; }
-  function plural(n, uno, varios) { return n + ' ' + (Math.abs(n) === 1 ? uno : varios); }
+  function plural(n, uno, varios) { return n + ' ' + I18n.t(Math.abs(n) === 1 ? uno : varios); }
   // Texto que aclara cómo se desempató entre a (ganó) y b, con sus cifras
   function textoDesempate(a, b, na, nb) {
     var c = comparar(a, b);
@@ -542,7 +542,7 @@
     var T = PreguntasOnline.TEMAS, l = PreguntasOnline.listaTemas(d.tema);
     if (l.length === T.length) return '✅ Todos los temas';
     var ts = T.filter(function (x) { return l.indexOf(x.id) >= 0; });
-    if (ts.length === 1) return ts[0].icono + ' ' + ts[0].nombre;
+    if (ts.length === 1) return ts[0].icono + ' ' + I18n.t(ts[0].nombre);
     return ts.map(function (x) { return x.icono; }).join(' ');
   }
   function todosLosTemas() { return PreguntasOnline.TEMAS.map(function (x) { return x.id; }); }
@@ -561,7 +561,7 @@
     var a = datosDesafio(d, d.res[yo.uid]), b = datosDesafio(d, d.res[o]), c = comparar(a, b);
     var n = (d.info[o] || {}).alias || 'tu amigo';
     c.a = a; c.b = b;
-    c.nota = c.por === 'puntos' ? '' : c.gana >= 0 ? textoDesempate(a, b, 'Vos', n) : textoDesempate(b, a, n, 'Vos');
+    c.nota = c.por === 'puntos' ? '' : c.gana >= 0 ? textoDesempate(a, b, I18n.t('Vos'), n) : textoDesempate(b, a, n, I18n.t('Vos'));
     return c;
   }
   function textoResultado(r) {
@@ -658,7 +658,7 @@
         raiz.innerHTML = cabecera('Desafío contra ' + esc((d.info[o] || {}).alias), Voz.boton()) +
           '<div class="progreso"><div class="progreso-barra"></div></div><div class="zona-quiz"></div>';
         function pintar() {
-          var q = d.preguntas[s.i];
+          var q = PreguntasOnline.local(d.preguntas[s.i]);
           raiz.querySelector('.progreso-barra').style.width = (s.i / d.preguntas.length * 100) + '%';
           raiz.querySelector('.zona-quiz').innerHTML = preguntaHTML(q, s.i, d.preguntas.length) +
             '<button class="op-quiz op-nose" data-k="-2">🤷 No sé</button>';
@@ -750,6 +750,7 @@
   }
   function resumenPreguntas(preguntas, jugadores) {
     return '<div class="resumen-preg">' + preguntas.map(function (q, i) {
+      q = PreguntasOnline.local(q);
       var lineas = q.t.split('\n');
       if (esVersiculo(q) && lineas.length > 1) lineas = [lineas[0], fragmento(lineas.slice(1).join(' '))];
       var todosBien = jugadores.length && jugadores.every(function (j) { return j.r && j.r[i] === q.c; });
@@ -761,6 +762,7 @@
     }).join('') + '</div>';
   }
   function preguntaHTML(q, i, n, extra) {
+    q = PreguntasOnline.local(q);
     var lineas = q.t.split('\n');
     return '<p class="num-quiz">Pregunta ' + (i + 1) + ' de ' + n + (extra || '') + '</p>' +
       '<div class="tarjeta-quiz">' + lineas.map(function (l, k) { return k === 0 ? '<b>' + esc(l) + '</b>' : '<p>' + esc(l) + '</p>'; }).join('') + '</div>' +
@@ -1060,7 +1062,7 @@
 
       // Pregunta en curso (todos)
       function pintarPregunta() {
-        var s = st.sala, q = s.preguntas[s.indice], juego = !st.soyOrg || s.juega;
+        var s = st.sala, q = PreguntasOnline.local(s.preguntas[s.indice]), juego = !st.soyOrg || s.juega;
         st.inicioLocal = Date.now();
         zona.innerHTML = '<div class="reloj"><div class="reloj-barra"></div><span class="reloj-num">' + s.seg + '</span></div>' +
           preguntaHTML(q, s.indice, s.preguntas.length) +
@@ -1136,7 +1138,7 @@
         el.replaceWith(d.firstChild);
       }
       function pintarResultado() {
-        var s = st.sala, q = s.preguntas[s.indice], juego = !st.soyOrg || s.juega;
+        var s = st.sala, q = PreguntasOnline.local(s.preguntas[s.indice]), juego = !st.soyOrg || s.juega;
         var ultima = s.indice >= s.preguntas.length - 1;
         clearInterval(st.timer);
         var mio = '', u = st.ultimo && st.ultimo.idx === s.indice ? st.ultimo : null;

@@ -20,6 +20,12 @@ window.FiltroAlias = (function () {
     'FUCK', 'FUK', 'FUCKS', 'FCK', 'SHIT', 'DICK', 'COCK', 'CUNT', 'PUSSY', 'BITCH', 'BICH', 'ASS', 'ASSES', 'ARSE',
     'SEX', 'PORN', 'NUDE', 'NUDES', 'BOOB', 'BOOBS', 'TITS', 'TIT', 'CUM', 'FAG', 'NIGGA', 'NIGG', 'NIGER', 'NEGRO',
     'RAPE', 'PENIS', 'ANAL', 'ANUS', 'WTF', 'STFU', 'DILDO', 'HORNY', 'SLUT', 'WHORE', 'HOE', 'XXX',
+    'BASTARD', 'PISS', 'PRICK', 'WANK', 'TWAT', 'JERK', 'STUPID', 'IDIOT', 'MORON', 'RETARD', 'DEATH', 'DRUGS', 'WEED',
+    // Portugués (Brasil)
+    'PORRA', 'CARALH', 'BUCET', 'BUCETA', 'XOXOT', 'PIROC', 'PINTO', 'CACET', 'FODA', 'FODER', 'FODID', 'FODAS', 'FDP', 'VTNC', 'VSF', 'PQP', 'TNC',
+    'MERDA', 'BOSTA', 'CU', 'CUZAO', 'VIAD', 'VEADO', 'BICHA', 'SAPATAO', 'PUTINHA', 'PUTARIA', 'ARROMB', 'OTARI', 'BABACA', 'BOBAO',
+    'IDIOTA', 'BURRO', 'CORNO', 'PEITO', 'PEITOS', 'BUNDA', 'BROXA', 'TESAO', 'SAFAD', 'PIRANH', 'VAGABUND', 'MACONH',
+    'DROGAS', 'MORTE', 'DIABO', 'DEMONIO',
     // Odio, violencia y temas no aptos para la app
     'NAZI', 'HITLE', 'KKK', 'SATAN', 'DEMON', 'DIABL', 'LUCIF', 'DROGA', 'MARIH', 'PORRO', 'FALOP', 'MATAR', 'MUERT',
     'SUICI', 'BOMBA', 'TERRO',

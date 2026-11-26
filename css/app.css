@@ -1094,7 +1094,7 @@ button.fila-ol { cursor: pointer; }
 /* ---------- Arte nuevo (2.7): islas ilustradas, banner y parque ---------- */
 body:not(.clasico) .isla, body:not(.clasico) .isla:nth-child(even) {
   background: linear-gradient(180deg, #DDF4FF 0%, #BDE8FB 62%, #8FD3F2 100%);
-  box-shadow: 0 6px 0 #6DB8DD, 0 12px 16px rgba(29,53,87,.16);
+  box-shadow: 0 6px 0 var(--isla-borde, #6DB8DD), 0 12px 16px rgba(29,53,87,.16);
   border-radius: 26px; padding: 8px 8px 12px; min-height: 0; gap: 4px;
 }
 body:not(.clasico) .isla-imagen { width: 100%; height: auto; aspect-ratio: 1 / .82; object-fit: contain; filter: drop-shadow(0 5px 4px rgba(29,53,87,.22)); }
@@ -1520,12 +1520,12 @@ body:not(.clasico) .carta-album.bloq .ca-num { position: absolute; left: 50%; bo
 
 /* ---------- Colores temáticos (solo apariencia Moderna; celeste es el de siempre) ----------
    Fondos suaves y botones fuertes. Los colores de acierto (verde) y error (rojo) NO cambian. */
-body.tema-coral:not(.clasico)   { --isla-2: #FFE6DF; --isla-3: #FFBFB0; --cielo-1: #FFB8A8; --cielo-2: #FFEAE3; --cielo-3: #FFF4E6; --primario: #C8492F; --primario-osc: #9C3622; --suave: #FFE3DC; --suave-2: #FFF3EF; --tinta: #3A1F1A; --tinta-suave: #6B4038; }
-body.tema-rosa:not(.clasico)    { --isla-2: #FFE6F2; --isla-3: #FFC4DF; --cielo-1: #FFBEDC; --cielo-2: #FFEAF4; --cielo-3: #FFF5EC; --primario: #C23B7E; --primario-osc: #922A5E; --suave: #FFE0EF; --suave-2: #FFF2F8; --tinta: #3A1630; --tinta-suave: #6E3E5E; }
-body.tema-verde:not(.clasico)   { --isla-2: #E2F6E8; --isla-3: #ADE2BF; --cielo-1: #A9E4BC; --cielo-2: #E8F7EC; --cielo-3: #FFF8E3; --primario: #2C7A4B; --primario-osc: #1E5A36; --suave: #DDF3E4; --suave-2: #F0FAF3; --tinta: #173826; --tinta-suave: #44624F; }
-body.tema-azul:not(.clasico)    { --isla-2: #E4ECFF; --isla-3: #B4C9FF; --cielo-1: #AFC6FF; --cielo-2: #E8EFFF; --cielo-3: #F6F1FF; --primario: #3653C9; --primario-osc: #26399A; --suave: #E0E8FF; --suave-2: #F1F5FF; --tinta: #18234D; --tinta-suave: #47527E; }
-body.tema-naranja:not(.clasico) { --isla-2: #FFEEDB; --isla-3: #FFCF9E; --cielo-1: #FFCB94; --cielo-2: #FFF0DE; --cielo-3: #FFF8E6; --primario: #B85309; --primario-osc: #8C3F06; --suave: #FFE7CC; --suave-2: #FFF5EA; --tinta: #3A2410; --tinta-suave: #6B4A2C; }
-body.tema-violeta:not(.clasico) { --isla-2: #EFE7FF; --isla-3: #CFBBFF; --cielo-1: #CDB6FF; --cielo-2: #F1EAFF; --cielo-3: #FFF4F0; --primario: #7442CF; --primario-osc: #552E9E; --suave: #EAE0FF; --suave-2: #F6F2FF; --tinta: #26184A; --tinta-suave: #574B7E; }
+body.tema-coral:not(.clasico)   { --isla-borde: #E8907C; --isla-2: #FFE6DF; --isla-3: #FFBFB0; --cielo-1: #FFB8A8; --cielo-2: #FFEAE3; --cielo-3: #FFF4E6; --primario: #C8492F; --primario-osc: #9C3622; --suave: #FFE3DC; --suave-2: #FFF3EF; --tinta: #3A1F1A; --tinta-suave: #6B4038; }
+body.tema-rosa:not(.clasico)    { --isla-borde: #E58AB6; --isla-2: #FFE6F2; --isla-3: #FFC4DF; --cielo-1: #FFBEDC; --cielo-2: #FFEAF4; --cielo-3: #FFF5EC; --primario: #C23B7E; --primario-osc: #922A5E; --suave: #FFE0EF; --suave-2: #FFF2F8; --tinta: #3A1630; --tinta-suave: #6E3E5E; }
+body.tema-verde:not(.clasico)   { --isla-borde: #6FC08C; --isla-2: #E2F6E8; --isla-3: #ADE2BF; --cielo-1: #A9E4BC; --cielo-2: #E8F7EC; --cielo-3: #FFF8E3; --primario: #2C7A4B; --primario-osc: #1E5A36; --suave: #DDF3E4; --suave-2: #F0FAF3; --tinta: #173826; --tinta-suave: #44624F; }
+body.tema-azul:not(.clasico)    { --isla-borde: #7E9CF0; --isla-2: #E4ECFF; --isla-3: #B4C9FF; --cielo-1: #AFC6FF; --cielo-2: #E8EFFF; --cielo-3: #F6F1FF; --primario: #3653C9; --primario-osc: #26399A; --suave: #E0E8FF; --suave-2: #F1F5FF; --tinta: #18234D; --tinta-suave: #47527E; }
+body.tema-naranja:not(.clasico) { --isla-borde: #EDA25C; --isla-2: #FFEEDB; --isla-3: #FFCF9E; --cielo-1: #FFCB94; --cielo-2: #FFF0DE; --cielo-3: #FFF8E6; --primario: #B85309; --primario-osc: #8C3F06; --suave: #FFE7CC; --suave-2: #FFF5EA; --tinta: #3A2410; --tinta-suave: #6B4A2C; }
+body.tema-violeta:not(.clasico) { --isla-borde: #A585EC; --isla-2: #EFE7FF; --isla-3: #CFBBFF; --cielo-1: #CDB6FF; --cielo-2: #F1EAFF; --cielo-3: #FFF4F0; --primario: #7442CF; --primario-osc: #552E9E; --suave: #EAE0FF; --suave-2: #F6F2FF; --tinta: #26184A; --tinta-suave: #574B7E; }
 /* El error se marca también con un borde más grueso y un temblor, para que se note en cualquier color */
 body:not(.clasico) :is(button.mal, .sopa-celda.mal, .tarjeta-libro.mal, .ficha-sel.mal) { box-shadow: inset 0 0 0 3px #B42318 !important; animation: temblor-error .35s ease-in-out; }
 @keyframes temblor-error { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
@@ -1647,3 +1647,16 @@ body:not(.clasico) .ajuste-colores { display: block; }
 /* La voltereta la hace solo: las cosas de la actividad desaparecen un momento y vuelven */
 .ac-atras, .ac-medio, .pj-herr-der, .pj-herr-izq { transition: opacity .2s; }
 .sin-trabajo .ac-atras, .sin-trabajo .ac-medio, .sin-trabajo .pj-herr-der, .sin-trabajo .pj-herr-izq { opacity: 0; }
+
+/* ---------- Elegir idioma ---------- */
+.idioma-arca { width: 150px; display: block; margin: 8px auto 4px; filter: drop-shadow(0 6px 6px rgba(29,53,87,.2)); }
+.p-idioma .encabezado-centro h1 small { display: block; font-size: .9rem; font-weight: 700; color: var(--tinta-suave); margin-top: 4px; }
+.lista-idiomas { display: grid; gap: 14px; margin-top: 10px; }
+.tarjeta-idioma { display: flex; align-items: center; gap: 18px; background: var(--blanco); border-radius: 24px; padding: 14px 18px;
+  box-shadow: var(--sombra); font-size: 1.5rem; font-weight: 800; text-align: left; transition: transform .15s; }
+.tarjeta-idioma:active { transform: scale(.97); }
+.bandera { display: inline-flex; flex: none; }
+.bandera svg { width: 64px; height: 43px; border-radius: 7px; box-shadow: 0 0 0 2px rgba(0,0,0,.08), 0 3px 4px rgba(29,53,87,.18); }
+.estilos-idioma { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip-idioma { display: inline-flex; align-items: center; gap: 6px; }
+.chip-idioma .bandera svg { width: 24px; height: 16px; border-radius: 3px; box-shadow: 0 0 0 1px rgba(0,0,0,.12); }

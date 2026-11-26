@@ -232,7 +232,7 @@
         pz.classList.add('aparece-metal');
         ui.cont.querySelector('.leyenda').innerHTML = '<b>' + p.parte + ': ' + p.metal.toLowerCase() + '</b>' +
           (s.club === 'aventureros' ? '' : '<span>' + p.detalle + '</span>');
-        Voz.decir(p.parte + ', de ' + p.metal.toLowerCase());
+        Voz.decir(p.parte + I18n.de(', de ', ', of ', ', de ') + p.metal.toLowerCase());
         s.colocados++;
         ui.progreso(s.colocados / D.partes.length);
         if (s.colocados === D.partes.length) {
@@ -265,7 +265,7 @@
       b.classList.add('correcta');
       Voz.decir(p.imperio, true);
       ui.cont.querySelector('.leyenda').classList.add('tarjeta-verde');
-      ui.cont.querySelector('.leyenda').innerHTML = '<b>✔ ' + p.parte + ' de ' + p.metal.toLowerCase() + ': ' + p.imperio + '</b><span>' + (p.cita || p.detalle) + '</span>';
+      ui.cont.querySelector('.leyenda').innerHTML = '<b>✔ ' + p.parte + I18n.de(' de ', ' of ', ' de ') + p.metal.toLowerCase() + ': ' + p.imperio + '</b><span>' + (p.cita || p.detalle) + '</span>';
       s.i++;
       ui.progreso(s.i / D.partes.length);
       var ultima = s.i >= D.partes.length;
@@ -287,7 +287,7 @@
       z.classList.toggle('apagada', !activo && !hecho);
     });
     ui.cont.querySelector('.leyenda').classList.remove('tarjeta-verde');
-    ui.cont.querySelector('.leyenda').innerHTML = '<b>' + p.parte + ' de ' + p.metal.toLowerCase() + '</b><span>¿Qué reino representa?</span>';
+    ui.cont.querySelector('.leyenda').innerHTML = '<b>' + p.parte + I18n.de(' de ', ' of ', ' de ') + p.metal.toLowerCase() + '</b><span>¿Qué reino representa?</span>';
     var ops = s.club === 'aventureros'
       ? Azar.mezclar([p].concat(Azar.mezclar(D.partes.filter(function (x) { return x.id !== p.id; })).slice(0, 2)))
       : Azar.mezclar(D.partes.slice());

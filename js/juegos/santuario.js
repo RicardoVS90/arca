@@ -124,7 +124,7 @@
       acierto();
       s.bloqueado = true;
       b.classList.add('correcta');
-      var LUG = { atrio: 'Atrio', santo: 'Lugar Santo', santisimo: 'Lugar Santísimo' };
+      var LUG = D.lugares;
       Voz.decir(LUG[m.lugar], true);
       s.i++;
       ui.progreso(s.i / s.cola.length);

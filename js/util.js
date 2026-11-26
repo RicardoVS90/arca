@@ -165,6 +165,15 @@ window.Voz = {
   },
   PAISES: { ES: 'España', US: 'Latinoamérica', MX: 'México', AR: 'Argentina', PY: 'Paraguay', CO: 'Colombia', CL: 'Chile',
     PE: 'Perú', UY: 'Uruguay', VE: 'Venezuela', BO: 'Bolivia', EC: 'Ecuador', '419': 'Latinoamérica' },
+  // Países de las voces en inglés y portugués
+  PAISES_EN: { US: 'United States', GB: 'United Kingdom', AU: 'Australia', CA: 'Canada', IN: 'India', IE: 'Ireland', NZ: 'New Zealand', ZA: 'South Africa', NG: 'Nigeria' },
+  PAISES_PT: { BR: 'Brasil', PT: 'Portugal' },
+  // Idioma de la voz según el idioma de la app ('es', 'en' o 'pt')
+  _idioma: function () { return (window.I18n && I18n.lang) || 'es'; },
+  _esDelIdioma: function (lang) { return new RegExp('^' + this._idioma(), 'i').test(lang || ''); },
+  _langPorDefecto: function () { return { es: 'es-ES', en: 'en-US', pt: 'pt-BR' }[this._idioma()]; },
+  // La voz elegida se guarda aparte para cada idioma
+  _clave: function (k) { var l = this._idioma(); return l === 'es' ? k : k + '_' + l; },
   _bautizar: function (lista) {
     var self = this, usados = { neutro: 0, mujer: 0, hombre: 0 };
     lista.sort(function (a, b) { return (a.lang + a.id).localeCompare(b.lang + b.id); });
@@ -173,7 +182,8 @@ window.Voz = {
       var tipo = /female|mujer|femen/.test(t) ? 'mujer' : /\bmale|hombre|mascul/.test(t) ? 'hombre' : 'neutro';
       var l = self.NOMBRES_VOZ[tipo], k = usados[tipo]++;
       var nom = l[k % l.length] + (k >= l.length ? ' ' + (Math.floor(k / l.length) + 1) : '');
-      var pais = self.PAISES[(v.lang.split(/[-_]/)[1] || '').toUpperCase()] || 'español';
+      var cod = (v.lang.split(/[-_]/)[1] || '').toUpperCase(), idi = self._idioma();
+      var pais = (idi === 'en' ? self.PAISES_EN[cod] || 'English' : idi === 'pt' ? self.PAISES_PT[cod] || 'Português' : self.PAISES[cod] || 'español');
       v.nombre = nom + ' · ' + pais + (/network|online|natural/.test(t) ? ' (con internet)' : '');
       return v;
     });
@@ -186,13 +196,13 @@ window.Voz = {
       return tts.getSupportedVoices().then(function (r) {
         self._listaTTS = r.voices || [];
         return self._bautizar(self._listaTTS.map(function (v, i) { return { id: v.voiceURI || v.name || String(i), tecnico: nombre(v), lang: v.lang || '' }; })
-          .filter(function (v) { return /^es/i.test(v.lang); }));
+          .filter(function (v) { return self._esDelIdioma(v.lang); }));
       }).catch(function () { return []; });
     }
     if (!('speechSynthesis' in window)) return Promise.resolve([]);
     return new Promise(function (res) {
       function listar() {
-        res(self._bautizar(speechSynthesis.getVoices().filter(function (v) { return /^es/i.test(v.lang); })
+        res(self._bautizar(speechSynthesis.getVoices().filter(function (v) { return self._esDelIdioma(v.lang); })
           .map(function (v) { return { id: v.voiceURI || v.name, tecnico: nombre(v), lang: v.lang }; })));
       }
       if (speechSynthesis.getVoices().length) listar();
@@ -201,17 +211,20 @@ window.Voz = {
   },
   // Si el jugador nunca eligió voz, se elige una sola vez: Nico, si no Santi, si no la primera de Latinoamérica
   elegirPorDefecto: function () {
-    if (Almacen.leer('voz_id', '') || Almacen.leer('voz_auto', false)) return;
+    var self = this;
+    if (Almacen.leer(this._clave('voz_id'), '') || Almacen.leer(this._clave('voz_auto'), false)) return;
     this.voces().then(function (lista) {
       if (!lista || !lista.length) return;
       function con(pref) { return lista.filter(function (v) { return v.nombre.indexOf(pref) === 0; })[0]; }
       function pais(p) { return lista.filter(function (x) { return x.nombre.indexOf(p) >= 0; })[0]; }
       // En iPhone o PC no están Nico ni Santi: se busca una voz latinoamericana, y si no hay, cualquiera en español
-      var v = con('Nico · Latinoamérica') || con('Santi · Latinoamérica') || pais('Latinoamérica') ||
+      var idi = self._idioma();
+      var v = idi === 'en' ? (pais('United States') || lista[0]) : idi === 'pt' ? (pais('Brasil') || lista[0]) :
+        (con('Nico · Latinoamérica') || con('Santi · Latinoamérica') || pais('Latinoamérica') ||
         pais('México') || pais('Argentina') || pais('Colombia') || pais('Paraguay') ||
-        lista.filter(function (x) { return x.nombre.indexOf('España') < 0; })[0] || lista[0];
-      if (v) Almacen.guardar('voz_id', v.id);
-      Almacen.guardar('voz_auto', true);
+        lista.filter(function (x) { return x.nombre.indexOf('España') < 0; })[0] || lista[0]);
+      if (v) Almacen.guardar(self._clave('voz_id'), v.id);
+      Almacen.guardar(self._clave('voz_auto'), true);
     });
   },
   // Corta la lectura pero deja avanzar al juego (lo que esperaba la voz sigue enseguida)
@@ -249,6 +262,7 @@ window.Voz = {
   // Lee la pregunta nueva después de la pausa; si antes se dice otra cosa o se cambia de pantalla, no se lee
   leer: function (texto) {
     var self = this;
+    if (window.I18n) texto = I18n.t(texto);
     clearTimeout(this._tPregunta);
     if (!this.activa() || !texto) return;
     this._tPregunta = setTimeout(function () { self._tPregunta = null; self.decir(texto); self._esPregunta = true; }, this.PAUSA_PREGUNTA);
@@ -256,6 +270,7 @@ window.Voz = {
   // encolar = true: no corta lo que se está leyendo, se lee después
   decir: function (texto, encolar) {
     clearTimeout(this._tPregunta);
+    if (window.I18n && texto) texto = I18n.t(texto);
     if (!this.activa() || !texto) return;
     // Lo que se dice al responder no espera a que termine la pregunta: la corta
     if (encolar && this._esPregunta) encolar = false;
@@ -266,8 +281,8 @@ window.Voz = {
     var tts = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.TextToSpeech;
     if (tts) {
       this._pendientes++;
-      var est = this._estilo(), opc = { text: texto, lang: 'es-ES', rate: est.rate, pitch: est.pitch, queueStrategy: encolar ? 1 : 0 };
-      var elegida = Almacen.leer('voz_id', '');
+      var est = this._estilo(), opc = { text: texto, lang: this._langPorDefecto(), rate: est.rate, pitch: est.pitch, queueStrategy: encolar ? 1 : 0 };
+      var elegida = Almacen.leer(this._clave('voz_id'), '');
       if (elegida && this._listaTTS) {
         for (var k = 0; k < this._listaTTS.length; k++) {
           var vv = this._listaTTS[k];
@@ -282,12 +297,12 @@ window.Voz = {
     try {
       if (!encolar) speechSynthesis.cancel();
       var u = new SpeechSynthesisUtterance(texto);
-      u.lang = 'es-ES';
+      u.lang = this._langPorDefecto();
       var est2 = this._estilo();
       u.rate = est2.rate;
       u.pitch = est2.pitch;
-      var voces = speechSynthesis.getVoices().filter(function (v) { return /^es/i.test(v.lang); });
-      var id = Almacen.leer('voz_id', '');
+      var voces = speechSynthesis.getVoices().filter(function (v) { return self._esDelIdioma(v.lang); });
+      var id = Almacen.leer(this._clave('voz_id'), '');
       var vz = voces.filter(function (v) { return (v.voiceURI || v.name) === id; })[0] || voces[0];
       if (vz) { u.voice = vz; u.lang = vz.lang; }
       u.onend = u.onerror = function () { self._fin(gen); };
@@ -334,7 +349,7 @@ window.Estrellas = {
 window.mostrarTexto = function (titulo, texto, cita) {
   var m = document.getElementById('modal');
   m.innerHTML = '<div class="modal-caja texto-biblico"><h2>' + titulo + '</h2>' +
-    '<p class="versiculo">' + texto + '</p><p class="cita">' + cita + ' (RV1960)</p>' +
+    '<p class="versiculo">' + texto + '</p><p class="cita">' + cita + ' (' + (window.I18n ? I18n.biblia() : 'RV1960') + ')</p>' +
     '<button class="btn-principal" data-accion="cerrar-modal">Cerrar</button></div>';
   m.classList.add('visible');
 };

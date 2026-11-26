@@ -1,6 +1,6 @@
 // Navegación y pantallas de la app
 (function () {
-  var VERSION = '2.17.0';
+  var VERSION = '2.18.0';
   var raiz = document.getElementById('pantalla');
   var historial = [];
   var estado = { testamento: 'AT', mecanica: 'tocar' };
@@ -25,6 +25,8 @@
   };
 
   function perfil() { return Almacen.leer('perfil', null); }
+  // Logo del club (el de Aventureros tiene el nombre escrito: hay uno por idioma)
+  function logo(club) { return 'img/logos/' + (club === 'aventureros' && I18n.lang !== 'es' ? I18n.lang + '/' : '') + club + '.png'; }
   function modulo(id) { return {
       mandamientos: window.JuegoMandamientos, creacion: window.JuegoCreacion, plagas: window.JuegoPlagas,
       santuario: window.JuegoSantuario, daniel: window.JuegoDaniel, versiculos: window.JuegoVersiculos,
@@ -145,7 +147,33 @@
       flores + '</svg>';
   }
 
+  // Banderas de los idiomas (dibujadas, así se ven igual en cualquier teléfono o PC)
+  var BANDERAS = {
+    es: '<svg viewBox="0 0 60 40" aria-hidden="true"><rect width="60" height="40" fill="#C60B1E"/><rect y="10" width="60" height="20" fill="#FFC400"/></svg>',
+    en: '<svg viewBox="0 0 60 40" aria-hidden="true"><rect width="60" height="40" fill="#fff"/>' +
+      [0, 2, 4, 6, 8, 10, 12].map(function (i) { return '<rect y="' + (i * 40 / 13) + '" width="60" height="' + (40 / 13) + '" fill="#B22234"/>'; }).join('') +
+      '<rect width="26" height="21.5" fill="#3C3B6E"/>' +
+      [0, 1, 2, 3].map(function (f) { return [0, 1, 2, 3, 4].map(function (c) { return '<circle cx="' + (3 + c * 5 + (f % 2) * 2.5) + '" cy="' + (3 + f * 5) + '" r="1.1" fill="#fff"/>'; }).join(''); }).join('') + '</svg>',
+    pt: '<svg viewBox="0 0 60 40" aria-hidden="true"><rect width="60" height="40" fill="#009C3B"/><path d="M30 4 56 20 30 36 4 20Z" fill="#FFDF00"/>' +
+      '<circle cx="30" cy="20" r="9" fill="#002776"/><path d="M21.4 17.6c6-1.4 12.3-.6 17.4 2.6" stroke="#fff" stroke-width="1.6" fill="none"/></svg>'
+  };
+  function cambiarIdioma(id) {
+    I18n.elegir(id);
+    if (id !== I18n.lang) location.reload();
+    return id === I18n.lang;
+  }
+
   var PANTALLAS = {
+    // Primera vez: elegir el idioma (las palabras quedan en su propio idioma, sin traducir)
+    idioma: function () {
+      raiz.innerHTML =
+        '<div class="encabezado-centro" data-no-t><img class="idioma-arca" src="img/arca.webp" alt="">' +
+          '<h1>Elegí tu idioma<br><small>Choose your language · Escolha o seu idioma</small></h1></div>' +
+        '<div class="lista-idiomas" data-no-t>' + I18n.IDIOMAS.map(function (x) {
+          return '<button class="tarjeta-idioma" data-accion="idioma" data-valor="' + x.id + '"><span class="bandera">' + BANDERAS[x.id] + '</span><span>' + x.nombre + '</span></button>';
+        }).join('') + '</div>';
+    },
+
     // Pantalla de carga: el arca con una barrita que se llena mientras se cargan las imágenes
     carga: function () {
       raiz.innerHTML =
@@ -156,7 +184,7 @@
           '<p class="carga-texto">Cargando… 0 %</p>' +
         '</div>';
       var relleno = raiz.querySelector('.carga-relleno'), texto = raiz.querySelector('.carga-texto');
-      var imagenes = ['img/logos/aventureros.png', 'img/logos/conquistadores.png', 'img/menu/parque.webp', 'img/menu/banner-online.webp'].concat(JUEGOS.map(function (j) { return 'img/menu/isla-' + j.id + '.webp'; }));
+      var imagenes = [logo('aventureros'), logo('conquistadores'), 'img/menu/parque.webp', 'img/menu/banner-online.webp'].concat(JUEGOS.map(function (j) { return 'img/menu/isla-' + j.id + '.webp'; }));
       var listas = 0, inicio = Date.now(), DURACION = 2600, yo = navegacion;
       imagenes.forEach(function (src) {
         var im = new Image(); im.onload = im.onerror = function () { listas++; }; im.src = src;
@@ -168,7 +196,7 @@
         if (t >= 1) pct = 100;
         relleno.style.width = pct + '%';
         texto.textContent = 'Cargando… ' + pct + ' %';
-        if (pct >= 100) setTimeout(function () { if (yo === navegacion) ir('bienvenida', null, true); }, 350);
+        if (pct >= 100) setTimeout(function () { if (yo === navegacion) ir(I18n.elegido ? 'bienvenida' : 'idioma', null, true); }, 350);
         else requestAnimationFrame(paso);
       })();
     },
@@ -197,7 +225,7 @@
         '<div class="encabezado-centro"><h1>¿A qué club pertenecés?</h1></div>' +
         '<div class="lista-clubes">' +
           '<button class="tarjeta-club" data-accion="club" data-club="aventureros">' +
-            '<img src="img/logos/aventureros.png" alt=""><span>Aventureros</span></button>' +
+            '<img src="' + logo('aventureros') + '" alt=""><span>Aventureros</span></button>' +
           '<button class="tarjeta-club" data-accion="club" data-club="conquistadores">' +
             '<img src="img/logos/conquistadores.png" alt=""><span>Conquistadores</span></button>' +
           '<button class="tarjeta-club" data-accion="club" data-club="ninguno">' +
@@ -238,7 +266,7 @@
       raiz.innerHTML =
         '<header class="barra-menu">' +
           '<button class="club-actual" data-accion="cambiar-club" aria-label="Cambiar club o personaje">' +
-            (p.club === 'ninguno' ? '' : '<img src="img/logos/' + p.club + '.png" alt="">') + CLUBES[p.club] +
+            (p.club === 'ninguno' ? '' : '<img src="' + logo(p.club) + '" alt="">') + CLUBES[p.club] +
             '<span class="cambiar">✎</span></button>' +
           '<button class="btn-album" data-accion="album" aria-label="Mi álbum de personajes"><span class="ic" data-arte="album-icono">🃏</span>' + Album.conteo() + '/' + Album.total + '</button>' +
           '<button class="btn-icono" data-accion="ajustes" aria-label="Ajustes">⚙</button>' +
@@ -362,6 +390,9 @@
       '<div class="modal-caja">' +
         '<h2>Ajustes</h2>' +
         '<label class="interruptor"><span>🎵 Música (himnos)</span><input type="checkbox" data-ajuste="musica"' + (Musica.activa() ? ' checked' : '') + '></label>' +
+        '<div class="ajuste-musica"><b>🌐 Idioma · Language</b><div class="estilos-idioma" data-no-t>' + I18n.IDIOMAS.map(function (x) {
+          return '<button class="chip-estilo chip-idioma' + (I18n.lang === x.id ? ' activo' : '') + '" data-accion="idioma" data-valor="' + x.id + '"><span class="bandera">' + BANDERAS[x.id] + '</span>' + x.nombre + '</button>';
+        }).join('') + '</div></div>' +
         '<div class="ajuste-musica"><b>Apariencia</b><div class="estilos-apariencia">' +
           '<button class="chip-estilo' + (Apariencia.clasica() ? '' : ' activo') + '" data-accion="apariencia" data-valor="moderna">✨ Moderna</button>' +
           '<button class="chip-estilo' + (Apariencia.clasica() ? ' activo' : '') + '" data-accion="apariencia" data-valor="clasica">🧸 Clásica</button>' +
@@ -394,7 +425,7 @@
     Voz.voces().then(function (lista) {
       var sel = m.querySelector('.selector-voz');
       if (!sel) return;
-      var elegida = Almacen.leer('voz_id', '');
+      var elegida = Almacen.leer(Voz._clave('voz_id'), '');
       lista.forEach(function (v) {
         var o = document.createElement('option');
         o.value = v.id; o.textContent = v.nombre;
@@ -415,7 +446,7 @@
     var k = ev.target.dataset.ajuste;
     if (k === 'musica') Musica.activar(ev.target.checked);
     else if (k) { Almacen.guardar(k, ev.target.checked); if (k === 'voz' && !ev.target.checked) Voz.callar(); }
-    if (ev.target.dataset.ajusteVoz) { Almacen.guardar('voz_id', ev.target.value); Voz.decir('Hola, esta es mi voz'); }
+    if (ev.target.dataset.ajusteVoz) { Almacen.guardar(Voz._clave('voz_id'), ev.target.value); Voz.decir('Hola, esta es mi voz'); }
   });
 
   // ---------- Acciones ----------
@@ -479,6 +510,9 @@
           else ir('online');
         });
         break;
+      case 'idioma':
+        if (cambiarIdioma(b.dataset.valor) && raiz.dataset.actual === 'idioma') ir('bienvenida', null, true);
+        break;
       case 'comenzar': Sonido.toque(); if (perfil()) ir('menu', null, true); else ir('club', null, true); break;
       case 'estilo-voz':
         Almacen.guardar('voz_estilo', b.dataset.estilo);
@@ -519,7 +553,7 @@
     if (CapApp) CapApp.addListener('backButton', function () {
       if (document.getElementById('modal').classList.contains('visible')) {
         document.getElementById('modal').classList.remove('visible');
-      } else if (raiz.dataset.actual === 'menu' || raiz.dataset.actual === 'club' ||
+      } else if (raiz.dataset.actual === 'menu' || raiz.dataset.actual === 'club' || raiz.dataset.actual === 'idioma' ||
                  raiz.dataset.actual === 'carga' || raiz.dataset.actual === 'bienvenida') {
         CapApp.exitApp();
       } else volver();

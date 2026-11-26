@@ -8,7 +8,9 @@
     ninguno:        { tam: 9,  n: 6, dirs: [[0, 1], [1, 0], [1, 1]] },
     conquistadores: { tam: 10, n: 8, dirs: [[0, 1], [1, 0], [1, 1], [-1, 1], [0, -1], [-1, 0], [-1, -1], [1, -1]] }
   };
-  var LETRAS = 'AAAABCDEEEEFGHIIIJLLMNNÑOOOPQRRSSTTUUVYZ';
+  // Letras de relleno según el idioma (frecuencias aproximadas)
+  var LETRAS = { es: 'AAAABCDEEEEFGHIIIJLLMNNÑOOOPQRRSSTTUUVYZ', en: 'AAABCDEEEEFGHHIIIJKLLMNNOOOPRRSSSTTTUUVWY',
+    pt: 'AAAABCDEEEEFGHIIIJLLMNNOOOOPQRRSSSTTUUVZ' }[(window.I18n && I18n.lang) || 'es'];
   var COLORES = ['#F6C445', '#7CC6F2', '#9BE07F', '#F59BC1', '#C9A7F5', '#F7A35C', '#6FD8C9', '#F28B82', '#B7D96B', '#8AB4F8'];
   var MODOS = D.temas.map(function (t) {
     var img = { 'libros-at': 'sopa-at', 'libros-nt': 'sopa-nt', personajes: 'sopa-personajes', discipulos: 'sopa-discipulos', tribus: 'sopa-tribus', lugares: 'sopa-lugares' }[t.id];
